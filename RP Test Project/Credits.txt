@@ -1,6 +1,33 @@
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-■ RESOURCES (For Demonstration Purposes Only)                      ■ 
-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+I am going to expand on this as the game goes on, and plan to work on a majority of it towards the end.
+----------------------------------------------------------------------
+■ RESOURCES                   
+----------------------------------------------------------------------
+- Beach Tileset: com-sho
+- Lava/Ocean Tilesets: whtdragon
+- Big/Flying Dragon Sprites: whtdragon
+- 8bit Tileset: Paul Barden & Damian Gasinski (aka Gassasin)
+- 8bit NPCs: 
+- 8bit Battlebacks: JoshuaThomas
+- Sci-Fi Lab Tileset: 
+- Library Tileset: 
+- Junk (Sci-Fi) Tileset: Galacti-Chron
+- Beehive Tileset: Guardinthena
+- Train Tiles: Chocobana
+- Reindeer Sprite: Hiddenone
+- Dragon Sprites: 
+- Anthro Eeveelution Sprites: FlareAeon
+- Sylveon Sprite: Tuxile
+- Extra Animal Sprites:
+- Sheep Sprites:
+- Card Sprites: Caz Wolf
+
+----------------------------------------------------------------------
+■ SFX RESOURCES                   
+----------------------------------------------------------------------
+- Roblox, Pokémon, and Mario & Luigi sfx and music from Roblox, Gamefreak, and Nintendo respectively...duh
+- Earthbound OST and SFX also from Nintendo
+- OFF OST & SFX by Alias Conrad Coldwood
+- Oneshot OST & SFX by Nightmargin, Eliza Velasquez, and GiRakaCHEEZER
 
 ----------------------------------------------------------------------
 ■ GENERAL (RTP XP , VX , MV, MZ)
@@ -13,3 +40,6 @@ https://tkool.jp/
 ----------------------------------------------------------------------
 Moghunter
 https://mogplugins.wordpress.com/
+
+- QuestLog: WinthorpDarkrites
+- Limited Inventory: Dungeonmind
