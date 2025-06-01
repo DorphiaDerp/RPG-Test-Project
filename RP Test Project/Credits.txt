@@ -1,4 +1,5 @@
 I am going to expand on this as the game goes on, and plan to work on a majority of it towards the end.
+Idk if it's really necessary but I wanna try!
 ----------------------------------------------------------------------
 ■ RESOURCES                   
 ----------------------------------------------------------------------
@@ -20,9 +21,10 @@ I am going to expand on this as the game goes on, and plan to work on a majority
 - Extra Animal Sprites:
 - Sheep Sprites:
 - Card Sprites: Caz Wolf
+- Train Inside Sprites: Nicnubill
 
 ----------------------------------------------------------------------
-■ SFX RESOURCES                   
+■ SFX RESOURCES - If something isn't in here it's probably credited in the file itself thanks to Cobalt <3
 ----------------------------------------------------------------------
 - Roblox, Pokémon, and Mario & Luigi sfx and music from Roblox, Gamefreak, and Nintendo respectively...duh
 - Earthbound OST and SFX also from Nintendo
