@@ -11,10 +11,10 @@
  * Become a Patron to get access to beta/alpha plugins plus other goodies!
  * https://www.patreon.com/CasperGamingRPGM
  * ============================================================================
- * Version: 1.11.0
+ * Version: 1.14.0
  * ----------------------------------------------------------------------------
  * Compatibility: Only tested with my CGMZ plugins.
- * Made for RPG Maker MZ 1.8.0
+ * Made for RPG Maker MZ 1.9.0
  * ----------------------------------------------------------------------------
  * Description: This plugin creates a powerful encyclopedia for your game,
  * with default categories including bestiary, items, armors, weapons, skills,
@@ -35,6 +35,14 @@
  * To enter buy mode, you can add an extra "true" onto the end of the prepare
  * script call. For example:
  * SceneManager.prepareNextScene(category, true);
+ * -------------------------Adding to Battle-----------------------------------
+ * To easily call the encyclopedia from the battle, use [CGMZ] Battle Command 
+ * Window and use the following script in its parameters if in a party
+ * command:
+ * this.showCGMZEncyclopedia(true);
+ *
+ * If you are instead calling it from an actor command, use the js:
+ * this.showCGMZEncyclopedia(false);
  * -------------------------Plugin Commands------------------------------------
  * • Discover Enemy
  * Discovers the enemy with the ID provided
@@ -99,8 +107,8 @@
  * states, actors.
  * -----------------------Category Backgrounds---------------------------------
  * To show a background image in the Encyclopedia Scene for a specific
- * category, set the symbol to the category symbol and the image to the image
- * file you want to use.
+ * category, set the symbol to the category symbol and the preset to match a
+ * [CGMZ] Scene Backgrounds preset id.
  *
  * The symbols for the default categories are: bestiary, items, armors,
  * weapons, skills, states, actors
@@ -116,6 +124,9 @@
  *
  * In an entry's price text, you can use %price which will be substituted for
  * the amount of the entry.
+ *
+ * In the toast manager preset, you can use %name which will be replaced by
+ * the encyclopedia entry name.
  * ----------------------------List Order--------------------------------------
  * You can use the List Order parameters for the default categories to
  * change the display order of those entries in the encyclopedia. Entries not
@@ -131,15 +142,12 @@
  * Lines displaced: 3, use multiplier size: 3.3
  * ---------------------------Date Formats-------------------------------------
  * The following numbers correspond to the following date formats:
- * 0: MM/DD/YYYY     (ex: 1/20/2001)
- * 1: DD/MM/YYYY     (ex: 20/1/2001)
- * 2: YYYY/MM/DD     (ex: 2001/1/20)
- * 3: Month DD, YYYY (ex: January 20, 2001)
- * 4: DD Month YYYY  (ex: 20 January 2001)
- * 5: Mon. DD, YYYY  (ex: Jan 20, 2001)
- * 6: DD Mon. YYYY   (ex: 20 Jan 2001)
- * 7: MM/DD          (ex: 1/20)
- * 8: DD/MM          (ex: 20/1)
+ * 0, 1, 2: Numeric day, month, year
+ * 3, 4: Numeric day, long month, numeric year
+ * 5, 6: Numeric day, short month, numeric year
+ * 7, 8: Numeric day, month
+ *
+ * Date formats will take the user's locale into account.
  * ---------------------------Saved Games--------------------------------------
  * This plugin has limited compatibility with saved games. New entries of any
  * category will automatically be recognized by saved games. Modified or
@@ -147,141 +155,41 @@
  * enemy (for example), this should work in a saved game. However, if you
  * change an enemy or delete an enemy, this would cause problems in saved
  * games.
- * -------------------------Version History------------------------------------
- * 1.1.0:
- * - Added additional checks during battle to discover enemies
+ * --------------------------Latest Version------------------------------------
+ * Hi all, this latest version adds New! marker text for entries that have been
+ * discovered but not yet viewed by the player, so they will be aware of the
+ * new entries.
  *
- * 1.1.1
- * - Fixed totals window being too large in some cases
- * - Fixed list window items having no padding
- * - Fixed bug with the list window not scrolling up after cancel
+ * You can now hide the total window in the scene, giving more space for the
+ * other windows and reducing clutter if the total is not important for your
+ * game.
  *
- * 1.1.2
- * - This plugin now initiates a check for CGMZ Achievements after discovery
+ * It also added a plugin command to change a custom entry name. This will also
+ * set the Display Name of that entry. You can also now discover custom entries
+ * by their name instead of by their id. This was added to both Discover Custom
+ * and Discover Custom Batch plugin commands, how it works is that if the id is
+ * set to 0, it will instead go by the new name parameter.
  *
- * 1.1.3
- * - Fixed a bug with TP Gain effects being drawn over Item descriptions
- * - Whitespace is now trimmed from the currency unit for the heading in
- *   bestiary
+ * This plugin now also shows [CGMZ] Currency System currency drops from enemies
+ * in the bestiary. This includes the currency name and icon in the currency
+ * color.
  *
- * 1.2.0
- * - New entries and custom data are now automatically recognized in saved
- *   games
- * - Added ability to use text codes in descriptions, categories, and item
- *   lists
- * - Added option to change label text color
- * - Added option to change text alignment of totals window
- * - Added option to customize category window height and column count
- * - Added plugin command to discover multiple entries at once
- * - Fixed bug with custom image size being incorrect for first draw
- * - Fixed display bug for items with learn skill effects
- * - Fixed display bug with Drop Item Double party effects
- * - Compatibility for VS Core (fix for weird window spacing)
+ * The Change Description plugin command for custom entries has a new mode
+ * option now, with both set and add modes. Set works the same way as previous,
+ * while add mode will append the new text onto the existing description.
  *
- * 1.2.1
- * - Fixed bug with columns for other horizontal command windows
+ * An integration with [CGMZ] Toast Manager was also added, and you can now
+ * show a toast window when a new entry in the encyclopedia is discovered. This
+ * works for all categories.
  * 
- * 1.2.2
- * - Fixed bug with Include Categories (when set to OFF only) behaving weirdly.
- *
- * 1.3.0
- * - Added ability to choose which info to display for every category
- * - Added ability to re-order information shown for every category
- * - Added custom batch discovery plugin command
- * - Added ability to turn off auto-discovery
- * - Increased max height of display window
- * - Fixed bug with custom entries that didn't have descriptions
- * - Fixed bug with uppercase symbols for custom categories
- * - Documentation no longer horizontally scrolls
- * - Documentation update to be easier to read/explain more
- *
- * 1.4.0
- * - You can now choose which category begins selected when the scene
- *   opens
- * - Added plugin command to store completion % in a variable
- * - Added plugin command to change custom entry description
- *
- * 1.5.0
- * - Added option to display different name in list and display windows
- *   for custom entries
- * - Custom entries now support multiple images instead of just one
- * - Added plugin command to change custom entry sketch
- * - Fixed issue with adding this plugin into a saved game that did not
- *   previously have the encyclopedia.
- *
- * 1.6.0
- * - Added option to hide undiscovered entries from the list window
- * - Added option to customize the sort order in the list window
- * - Added text code for displaying sketch images mixed in with
- *   description for custom entries
- * - Updated color parameters to use new text color selector
- *
- * 1.6.1
- * - Bugfix for missing parameters if using Chinese language
- *
- * 1.7.0
- * - Added new built in category: Actors
- * - Added option to center large icons
- * - Added option to show list window on right
- * - Added option to disable Touch UI space at top
- * - Added ability to change window padding for each window
- * - Added ability to change windowskin for each window
- * - Added ability to change the list window width
- * - Added Spanish language support
- *
- * 1.7.1
- * - Bugfix for incorrect states being included in some cases
- * - Bugfix for font not resetting when drawing a new entry
- * - Bugfix for certain cases where touch UI could cause list window
- *   scroll to be incorrect
- * 
- * 1.7.2
- * - Bugfix for crash when drawing actors with center icons option on
- * 
- * 1.7.3
- * - Bugfix for actor entries resetting after first save
- * 
- * 1.8.0
- * - Added ability to play BGMs while viewing enemies in bestiary
- * - Added option to display the date an entry was discovered
- * - Added option to autodiscover skills when they are used
- * - This plugin can now integrate with CGMZ Difficulty to show enemy
- *   stats/gold/exp based on the current difficulty
- * - This plugin now reports JSON parameter errors instead of crashing. If 
- *   something isn't working right, please check dev tool console before
- *   reporting a bug.
- * 
- * 1.9.0
- * - Added option to display the skills an enemy can use
- * - Added option to have a custom scene background image for each category
- * - Added option to change header line gradient colors
- * - Added option to have windows be transparent
- * - Added plugin command to check if an entry has been discovered
- * - Added option to automatically hide entries that have no name or a user
- *   defined string in their name
- * - Added option to make entries in the encyclopedia opt-in
- * 
- * 1.9.1
- * - Fixed crash when selecting empty enemy entry (all entries hidden)
- * - Fix bug with empty entry showing last selected non-empty entry info
- * 
- * 1.10.0
- * - Added subcategories
- * - Custom entries can now display main-category object data
- * - Added custom headers and info lines to custom entries
- * - Added option to change category window alignment
- * 
- * 1.11.0
- * - Added a way to purchase encyclopedia entries for gold + numerous
- *   options related to this new functionality
- * - Added option to use custom images for enemies
- * - Added option to use custom icon image for item/wep/armor/skill/state
- * - Added plugin command to discover entries by a range
- * - Added option to sort encyclopedia entries by discover date
- * - Added option to display TP costs in skills
- * - Fix potential crash when changing categories really quickly
- * - Now automatically discovers actors in starting party
- * - Converted deprecated cgmz temp calls to cgmz utils calls
+ * Version 1.14.0
+ * - Added New marker text for new entries
+ * - Added option to hide the total window
+ * - Added plugin command to change custom entry name
+ * - Added integration with [CGMZ] Currency System
+ * - Added integration with [CGMZ] Toast Manager
+ * - Change Description now supports appending text
+ * - Discovering custom entries now possible by name
  *
  * @command DiscoverEnemy
  * @text Discover Enemy
@@ -390,11 +298,13 @@
  * @arg id
  * @type number
  * @desc The id number of the entry to discover
- * @default 1
+ * @default 0
+ *
+ * @arg name
+ * @desc The name of the entry to discover (if id set to 0)
  *
  * @arg symbol
  * @desc The Category Symbol of the entry to discover
- * @default 
  *
  * @command Discover Custom Batch
  * @desc Discovers multiple custom entries in the encyclopedia
@@ -477,6 +387,13 @@
  * @desc The new description for the entry.
  * @default ""
  *
+ * @arg Mode
+ * @type select
+ * @option set
+ * @option add
+ * @desc If add mode, will append the new description onto the old description.
+ * @default set
+ *
  * @command Change Sketch
  * @desc Change a custom entry sketch
  *
@@ -491,6 +408,18 @@
  * @dir img/
  * @desc The new sketch for the entry.
  * @default []
+ *
+ * @command Change Name
+ * @desc Change a custom entry name
+ *
+ * @arg Name
+ * @desc The name of the entry to change
+ *
+ * @arg Symbol
+ * @desc The Category Symbol the entry belongs to
+ *
+ * @arg New Name
+ * @desc The new entry name.
  *
  * @command Check Discovered
  * @desc Check if an entry has been discovered
@@ -575,6 +504,12 @@
  * @type boolean
  * @desc If true, only entries with the <cgmzencyclopediahide> notetag will be included in the encyclopedia
  * @default false
+ * @parent Functional Options
+ * 
+ * @param Encyclopedia Item
+ * @type item
+ * @desc Item that, when used, will open the encyclopedia scene
+ * @default 0
  * @parent Functional Options
  *
  * @param Category Options
@@ -765,11 +700,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc If true, will display an "all" subcategory
  * @default true
  *
- * @param List Window Enable Text Codes
+ * @param Show Total Window
  * @parent Encyclopedia Scene Options
  * @type boolean
- * @desc Allow text codes in the list window? This will no longer automatically shrink text to fit
- * @default false
+ * @desc If true, will display a total window
+ * @default true
  *
  * @param Number Entries
  * @type boolean
@@ -811,6 +746,12 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type boolean
  * @desc If true, will not leave space for Touch UI buttons if Touch UI is disabled
  * @default false
+ *
+ * @param Disable Scroll Select
+ * @parent Encyclopedia Scene Options
+ * @type boolean
+ * @desc If true, will disable selecting an entry when no action is possible other than scroll
+ * @default true
  *
  * @param List Window On Right
  * @parent Encyclopedia Scene Options
@@ -888,84 +829,6 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc If the Encyclopedia Windows should have a transparent background
  * @parent Encyclopedia Scene Options
  *
- * @param Category Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the category window
- * @parent Encyclopedia Scene Options
- *
- * @param Subcategory Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the subcategory window
- * @parent Encyclopedia Scene Options
- *
- * @param List Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the list window
- * @parent Encyclopedia Scene Options
- *
- * @param Total Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the total window
- * @parent Encyclopedia Scene Options
- *
- * @param Display Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the display window
- * @parent Encyclopedia Scene Options
- *
- * @param Purchase Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the purchase window
- * @parent Encyclopedia Scene Options
- *
- * @param List Windowskin
- * @parent Encyclopedia Scene Options 
- * @type file
- * @dir img/
- * @desc The windowskin to use for the list window. Leave blank to use default.
- *
- * @param Display Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the display window. Leave blank to use default.
- *
- * @param Total Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the total window. Leave blank to use default.
- *
- * @param Category Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the Category window. Leave blank to use default.
- *
- * @param Subcategory Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the Subcategory window. Leave blank to use default.
- *
- * @param Purchase Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the purchase window. Leave blank to use default.
- *
  * @param Default Enemy Battle BGM
  * @parent Encyclopedia Scene Options
  * @type struct<BGM>
@@ -977,6 +840,62 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default []
  * @desc Set up scene backgrounds for the various categories here
  *
+ * @param Actor Sprite Width
+ * @desc The width to give an actor sprite if set to display
+ * @type number
+ * @min 0
+ * @default 48
+ * @parent Encyclopedia Scene Options
+ *
+ * @param Actor Sprite Height
+ * @desc The height to give an actor sprite if set to display
+ * @type number
+ * @min 0
+ * @default 48
+ * @parent Encyclopedia Scene Options
+ *
+ * @param Actor Sv Motion
+ * @parent Encyclopedia Scene Options
+ * @type select
+ * @option walk
+ * @value 0
+ * @option wait
+ * @value 1
+ * @option chant
+ * @value 2
+ * @option guard
+ * @value 3
+ * @option damage
+ * @value 4
+ * @option evade
+ * @value 5
+ * @option thrust
+ * @value 6
+ * @option swing
+ * @value 7
+ * @option missile
+ * @value 8
+ * @option skill
+ * @value 9
+ * @option spell
+ * @value 10
+ * @option item
+ * @value 11
+ * @option escape
+ * @value 12
+ * @option victory
+ * @value 13
+ * @option dying
+ * @value 14
+ * @option abnormal
+ * @value 15
+ * @option sleep
+ * @value 16
+ * @option dead
+ * @value 17
+ * @desc The motion to use when displaying actor sv sprite
+ * @default 13
+ *
  * @param Display Window Options
  *
  * @param Bestiary Display Info
@@ -987,6 +906,7 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Gold
  * @option Drops
  * @option Skills
+ * @option Traits
  * @option Note
  * @option Sketch
  * @option Discover Date
@@ -996,7 +916,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Note Header
  * @option Sketch Header
  * @option Skills Header
+ * @option Traits Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
+ * @option Kill Count
  * @desc The information and order to display when drawing a bestiary entry
  * @default ["Name","Stats","Exp","Gold","Drops","Note","Sketch"]
  * @parent Display Window Options
@@ -1019,6 +945,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Note Header
  * @option Description Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc The information and order to display when drawing an item entry
  * @default ["Name","Icon","Price","Key Item","Possession","Consumable","Success Rate","Effects","Description","Note"]
  * @parent Display Window Options
@@ -1042,6 +972,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Description Header
  * @option Stat Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc The information and order to display when drawing an armor entry
  * @default ["Name","Icon","Price","Equip Type","Possession","Armor Type","Stats","Traits","Description","Note"]
  * @parent Display Window Options
@@ -1065,6 +999,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Description Header
  * @option Stat Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc The information and order to display when drawing a weapon entry
  * @default ["Name","Icon","Price","Equip Type","Possession","Weapon Type","Stats","Traits","Description","Note"]
  * @parent Display Window Options
@@ -1086,6 +1024,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Note Header
  * @option Description Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc The information and order to display when drawing a skill entry
  * @default ["Name","Icon","Type","Costs","Success Rate","TP Gain","Effects","Description","Note"]
  * @parent Display Window Options
@@ -1105,6 +1047,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Trait Header
  * @option Note Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc The information and order to display when drawing a state entry
  * @default ["Name","Icon","Duration","Battle End Removal","Walking Removal","Damage Removal","Traits","Note"]
  * @parent Display Window Options
@@ -1113,6 +1059,8 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type select[]
  * @option Name
  * @option Face
+ * @option Walk Sprite
+ * @option Battle Sprite
  * @option Nickname
  * @option Class
  * @option Initial Level
@@ -1127,6 +1075,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Trait Header
  * @option Note Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc The information and order to display when drawing an actor entry
  * @default ["Name","Face","Nickname","Class","Profile","Stats","Traits","Note"]
  * @parent Display Window Options
@@ -1142,6 +1094,7 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Description Header
  * @option Custom Header
  * @option Blank Line
+ * @option Custom Space
  * @desc The information and order to display when drawing custom entry
  * @default ["Name","Description","Sketch"]
  * @parent Display Window Options
@@ -1193,6 +1146,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default ["Attack Speed","Attack Times","Attack Element","Attack States","Party Ability","Seal Skill Types","Add Skill Types","Add Skills","Seal Skills","State Resist"]
  * @parent Display Window Options
  *
+ * @param Custom Spacing Amount
+ * @parent Encyclopedia Scene Options
+ * @type number
+ * @min 0
+ * @desc When Display Info has option Custom Space, it will add this amount of pixels as blank space.
+ * @default 10
+ *
  * @param Strip Newlines In Description
  * @type boolean
  * @desc Replace newlines with a space in the description of items/etc?
@@ -1208,6 +1168,12 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @param Center Icons
  * @type boolean
  * @desc If true, icon display will be centered in the encyclopedia
+ * @default false
+ * @parent Display Window Options
+ *
+ * @param Center Face
+ * @type boolean
+ * @desc If true, actor face display will be centered in the encyclopedia
  * @default false
  * @parent Display Window Options
  *
@@ -1266,6 +1232,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type color
  * @desc The second color of the header line color gradient
  * @default 0
+ * @parent Text Options
+ *
+ * @param New Text
+ * @desc Text to show when an entry is updated
+ * @default \c[14]New!\c[0]
  * @parent Text Options
  *
  * @param Yes Text
@@ -1333,11 +1304,6 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default Basic
  * @parent Text Options
  *
- * @param Drops Text
- * @desc Text to show when describing rewards from an enemy
- * @default Drops:
- * @parent Text Options
- *
  * @param Show Drop Chances
  * @desc Determine whether drop chances are shown in the encyclopedia
  * @type boolean
@@ -1347,11 +1313,6 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @param Drop Chance Text
  * @desc Text to show when describing drop chance for an item
  * @default Chance:
- * @parent Text Options
- *
- * @param Sketch Text
- * @desc Text to show when describing a sketch for an item
- * @default Sketch:
  * @parent Text Options
  *
  * @param Note Text
@@ -1729,6 +1690,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default Notes
  * @parent Text Options
  *
+ * @param Bestiary Traits Header Text
+ * @desc Text to show in bestiary's traits header
+ * @default Traits
+ * @parent Text Options
+ *
  * @param Bestiary Stats Header Text
  * @desc Text to show in bestiary's stats header
  * @default Stats
@@ -1784,6 +1750,63 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc If true, stats/exp/gold display accurate to the current difficulty (requires CGMZ Difficulty)
  * @default true
  * @parent Integration Options
+ * 
+ * @param Discover Toast
+ * @desc The [CGMZ] Toast Manager preset id to use when a new entry is discovered.
+ * @parent Integration Options
+ *
+ * @param Kill Count Text
+ * @desc Text to show when describing the enemy kill count
+ * @default Defeated:
+ * @parent Integration Options
+ *
+ * @param Category Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the category window
+ *
+ * @param Subcategory Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the subcategory window
+ *
+ * @param List Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the list window
+ *
+ * @param Total Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the total window
+ *
+ * @param Display Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the display window
+ *
+ * @param Purchase Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the purchase window
+ *
+ * @param Category Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the category window
+ *
+ * @param Subcategory Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the subcategory window
+ *
+ * @param List Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the list window
+ *
+ * @param Total Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the total window
+ *
+ * @param Display Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the display window
+ *
+ * @param Purchase Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the purchase window
 */
 /*~struct~Category:
  * @param Category Name
@@ -1885,11 +1908,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @param id
  * @type number
  * @desc The id number of the custom entry to discover
- * @default 1
+ * @default 0
+ *
+ * @param name
+ * @desc The name of the entry to discover (if id set to 0)
  *
  * @param symbol
  * @desc The Category Symbol of the custom entry to discover
- * @default 
 */
 /*~struct~BGM:
  * @param name
@@ -1937,6 +1962,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraItemInfo:
  * @param id
@@ -1961,6 +2001,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraWeaponInfo:
  * @param id
@@ -1985,6 +2040,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraArmorInfo:
  * @param id
@@ -2009,6 +2079,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraSkillInfo:
  * @param id
@@ -2033,6 +2118,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraStateInfo:
  * @param id
@@ -2057,6 +2157,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraActorInfo:
  * @param id
@@ -2068,15 +2183,59 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
+*/
+/*~struct~ExtraImage:
+ * @param File
+ * @type file
+ * @dir img/
+ * @desc The image to display
+ * 
+ * @param Image Width
+ * @type number
+ * @min 0
+ * @default 0
+ * @desc The width to make the image
+ * 
+ * @param Image Height
+ * @type number
+ * @min 0
+ * @default 0
+ * @desc The height to make the image
+ * 
+ * @param Alignment
+ * @type select
+ * @option left
+ * @option center
+ * @option right
+ * @default center
+ * @desc Align the image to the left, center, or right of the display window?
+ * 
+ * @param Display Block
+ * @type boolean
+ * @default true
+ * @desc If true, this element will not let other elements into its height area
 */
 /*~struct~Background:
  * @param symbol
  * @desc The category symbol the background is for. See documentation.
  * 
- * @param image
- * @type file
- * @dir img/
- * @desc The image file to use for the background for the given category
+ * @param Preset
+ * @desc The [CGMZ] Scene Backgrounds preset id to use for the background
 */
 /*:zh-CN
  * @author Casper Gaming
@@ -2096,10 +2255,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * 然后获得作者和其插件的最新资讯，以及测试版插件的试用。
  * https://www.patreon.com/CasperGamingRPGM
  * ============================================================================
- * 【插件版本】V 1.11.0
+ * 【插件版本】V 1.14.0
  * ----------------------------------------------------------------------------
  * 【兼容性】仅测试作者所制作的插件
- * 【RM版本】RPG Maker MZ 1.8.0
+ * 【RM版本】RPG Maker MZ 1.9.0
  * ----------------------------------------------------------------------------
  * 【插件描述】
  * 建立一个功能强大的百科全书系统，用于收集记录游戏中的各种信息。
@@ -2118,6 +2277,14 @@ Purchase entry for \c[3]%price \g\c[0]?
  *    SceneManager.prepareNextScene("类别");
  *    类别即武器、物品、技能等。
  * 3. 以上2个指令也可以在事件-脚本指令中使用。
+ * -------------------------Adding to Battle-----------------------------------
+ * To easily call the encyclopedia from the battle, use [CGMZ] Battle Command 
+ * Window and use the following script in its parameters if in a party
+ * command:
+ * this.showCGMZEncyclopedia(true);
+ *
+ * If you are instead calling it from an actor command, use the js:
+ * this.showCGMZEncyclopedia(false);
  *
  * To enter buy mode, you can add an extra "true" onto the end of the prepare
  * script call. For example:
@@ -2193,17 +2360,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * states, actors.
  * -----------------------Category Backgrounds---------------------------------
  * To show a background image in the Encyclopedia Scene for a specific
- * category, set the symbol to the category symbol and the image to the image
- * file you want to use.
+ * category, set the symbol to the category symbol and the preset to match a
+ * [CGMZ] Scene Backgrounds preset id.
  *
- * The symbols for the default categories are:
- * bestiary
- * items
- * armors
- * weapons
- * skills
- * states
- * actors
+ * The symbols for the default categories are: bestiary, items, armors,
+ * weapons, skills, states, actors
  * ----------------------------Text Codes--------------------------------------
  * In a custom entry description, you can use the encyclopedia text code:
  * \cgmzencdescimg[x]
@@ -2212,138 +2373,58 @@ Purchase entry for \c[3]%price \g\c[0]?
  *
  * In an entry's price text, you can use %price which will be substituted for
  * the amount of the entry.
+ *
+ * In the toast manager preset, you can use %name which will be replaced by
+ * the encyclopedia entry name.
  * ----------------------------List Order--------------------------------------
  * You can use the List Order parameters for the default categories to
  * change the display order of those entries in the encyclopedia. Entries not
  * listed in the List Order parameter will display in the default order (how
  * they are in the database).
  * ---------------------------Date Formats-------------------------------------
- * The following numbers correspond to the following date formats:
- * 0: MM/DD/YYYY     (ex: 1/20/2001)
- * 1: DD/MM/YYYY     (ex: 20/1/2001)
- * 2: YYYY/MM/DD     (ex: 2001/1/20)
- * 3: Month DD, YYYY (ex: January 20, 2001)
- * 4: DD Month YYYY  (ex: 20 January 2001)
- * 5: Mon. DD, YYYY  (ex: Jan 20, 2001)
- * 6: DD Mon. YYYY   (ex: 20 Jan 2001)
- * 7: MM/DD          (ex: 1/20)
- * 8: DD/MM          (ex: 20/1)
+ * * The following numbers correspond to the following date formats:
+ * 0, 1, 2: Numeric day, month, year
+ * 3, 4: Numeric day, long month, numeric year
+ * 5, 6: Numeric day, short month, numeric year
+ * 7, 8: Numeric day, month
+ *
+ * Date formats will take the user's locale into account.
  * ----------------------------------------------------------------------------
  *【版本更新历史】
- * 1.1.0
- * - Added additional checks during battle to discover enemies
- * 1.1.1
- * - Fixed totals window being too large in some cases
- * - Fixed list window items having no padding
- * - Fixed bug with the list window not scrolling up after cancel
- * 1.1.2
- * - This plugin now initiates a check for CGMZ Achievements after discovery
- * 1.1.3
- * - Fixed a bug with TP Gain effects being drawn over Item descriptions
- * - Whitespace is now trimmed from the currency unit for the heading in
- *   bestiary
- * 1.2.0
- * - New entries and custom data are now automatically recognized in saved
- *   games
- * - Added ability to use text codes in descriptions, categories, and item
- *   lists
- * - Added option to change label text color
- * - Added option to change text alignment of totals window
- * - Added option to customize category window height and column count
- * - Added plugin command to discover multiple entries at once
- * - Fixed bug with custom image size being incorrect for first draw
- * - Fixed display bug for items with learn skill effects
- * - Fixed display bug with Drop Item Double party effects
- * - Compatibility for VS Core (fix for weird window spacing)
- * 1.2.1
- * - Fixed bug with columns for other horizontal command windows 
- * 1.2.2
- * - Fixed bug with Include Categories (when set to OFF only) behaving weirdly.
- * 1.3.0
- * - Added ability to choose which info to display for every category
- * - Added ability to re-order information shown for every category
- * - Added custom batch discovery plugin command
- * - Added ability to turn off auto-discovery
- * - Increased max height of display window
- * - Fixed bug with custom entries that didn't have descriptions
- * - Fixed bug with uppercase symbols for custom categories
- * - Documentation no longer horizontally scrolls
- * - Documentation update to be easier to read/explain more
- * 1.4.0
- * - You can now choose which category begins selected when the scene
- *   opens
- * - Added plugin command to store completion % in a variable
- * - Added plugin command to change custom entry description
- * 1.5.0
- * - Added option to display different name in list and display windows
- *   for custom entries
- * - Custom entries now support multiple images instead of just one
- * - Added plugin command to change custom entry sketch
- * - Fixed issue with adding this plugin into a saved game that did not
- *   previously have the encyclopedia.
- * 1.6.0
- * - Added option to hide undiscovered entries from the list window
- * - Added option to customize the sort order in the list window
- * - Added text code for displaying sketch images mixed in with
- *   description for custom entries
- * - Updated color parameters to use new text color selector
- * 1.6.1
- * - Bugfix for missing parameters if using Chinese language
- * 1.7.0
- * - Added new built in category: Actors
- * - Added option to center large icons
- * - Added option to show list window on right
- * - Added option to disable Touch UI space at top
- * - Added ability to change window padding for each window
- * - Added ability to change windowskin for each window
- * - Added ability to change the list window width
- * - Added Spanish language support
- * 1.7.1
- * - Bugfix for incorrect states being included in some cases
- * - Bugfix for font not resetting when drawing a new entry
- * - Bugfix for certain cases where touch UI could cause list window
- *   scroll to be incorrect
- * 1.7.2
- * - Bugfix for crash when drawing actors with center icons option on
- * 1.7.3
- * - Bugfix for actor entries resetting after first save
- * 1.8.0
- * - Added ability to play BGMs while viewing enemies in bestiary
- * - Added option to display the date an entry was discovered
- * - Added option to autodiscover skills when they are used
- * - This plugin can now integrate with CGMZ Difficulty to show enemy
- *   stats/gold/exp based on the current difficulty
- * - This plugin now reports JSON parameter errors instead of crashing. If 
- *   something isn't working right, please check dev tool console before
- *   reporting a bug.
- * 1.9.0
- * - Added option to display the skills an enemy can use
- * - Added option to have a custom scene background image for each category
- * - Added option to change header line gradient colors
- * - Added option to have windows be transparent
- * - Added plugin command to check if an entry has been discovered
- * - Added option to automatically hide entries that have no name or a user
- *   defined string in their name
- * - Added option to make entries in the encyclopedia opt-in
- * 1.9.1
- * - Fixed crash when selecting empty enemy entry (all entries hidden)
- * - Fix bug with empty entry showing last selected non-empty entry info
- * 1.10.0
- * - Added subcategories
- * - Custom entries can now display main-category object data
- * - Added custom headers and info lines to custom entries
- * - Added option to change category window alignment
- * 1.11.0
- * - Added a way to purchase encyclopedia entries for gold + numerous
- *   options related to this new functionality
- * - Added option to use custom images for enemies
- * - Added option to use custom icon image for item/wep/armor/skill/state
- * - Added plugin command to discover entries by a range
- * - Added option to sort encyclopedia entries by discover date
- * - Added option to display TP costs in skills
- * - Fix potential crash when changing categories really quickly
- * - Now automatically discovers actors in starting party
- * - Converted deprecated cgmz temp calls to cgmz utils calls
+ * Hi all, this latest version adds New! marker text for entries that have been
+ * discovered but not yet viewed by the player, so they will be aware of the
+ * new entries.
+ *
+ * You can now hide the total window in the scene, giving more space for the
+ * other windows and reducing clutter if the total is not important for your
+ * game.
+ *
+ * It also added a plugin command to change a custom entry name. This will also
+ * set the Display Name of that entry. You can also now discover custom entries
+ * by their name instead of by their id. This was added to both Discover Custom
+ * and Discover Custom Batch plugin commands, how it works is that if the id is
+ * set to 0, it will instead go by the new name parameter.
+ *
+ * This plugin now also shows [CGMZ] Currency System currency drops from enemies
+ * in the bestiary. This includes the currency name and icon in the currency
+ * color.
+ *
+ * The Change Description plugin command for custom entries has a new mode
+ * option now, with both set and add modes. Set works the same way as previous,
+ * while add mode will append the new text onto the existing description.
+ *
+ * An integration with [CGMZ] Toast Manager was also added, and you can now
+ * show a toast window when a new entry in the encyclopedia is discovered. This
+ * works for all categories.
+ * 
+ * Version 1.14.0
+ * - Added New marker text for new entries
+ * - Added option to hide the total window
+ * - Added plugin command to change custom entry name
+ * - Added integration with [CGMZ] Currency System
+ * - Added integration with [CGMZ] Toast Manager
+ * - Change Description now supports appending text
+ * - Discovering custom entries now possible by name
  *
  * @command DiscoverEnemy
  * @text 发现敌人
@@ -2466,12 +2547,14 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @text 自定义信息ID
  * @type number
  * @desc 选择自定义信息在同类别中的顺序ID来激活。（具体见【使用说明】）
- * @default 1
+ * @default 0
+ *
+ * @arg name
+ * @desc The name of the entry to discover (if id set to 0)
  *
  * @arg symbol
  * @text 自定义类别字符
  * @desc 输入以指定自定义信息条目所属的类别字符（Category Symbol）。字符、大小写必须一致。
- * @default 
  *
  * @command Discover Custom Batch
  * @text 批量发现自定义类别信息
@@ -2565,6 +2648,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc 输入新的描述内容。
  * @default ""
  *
+ * @arg Mode
+ * @type select
+ * @option set
+ * @option add
+ * @desc If add mode, will append the new description onto the old description.
+ * @default set
+ *
  * @command Change Sketch
  * @text 新的图片
  * @desc 修改一个自定义信息的图片。
@@ -2583,6 +2673,18 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @dir img/
  * @desc 选择一张新图片用于该自定义信息。
  * @default []
+ *
+ * @command Change Name
+ * @desc Change a custom entry name
+ *
+ * @arg Name
+ * @desc The name of the entry to change
+ *
+ * @arg Symbol
+ * @desc The Category Symbol the entry belongs to
+ *
+ * @arg New Name
+ * @desc The new entry name.
  *
  * @command Check Discovered
  * @desc Check if an entry has been discovered
@@ -2681,6 +2783,12 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type boolean
  * @desc If true, only entries with the <cgmzencyclopediahide> notetag will be included in the encyclopedia
  * @default false
+ * @parent Functional Options
+ * 
+ * @param Encyclopedia Item
+ * @type item
+ * @desc Item that, when used, will open the encyclopedia scene
+ * @default 0
  * @parent Functional Options
  *
  * @param Category Options
@@ -2888,12 +2996,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc If true, will display an "all" subcategory
  * @default true
  *
- * @param List Window Enable Text Codes
- * @text 信息列表能否使用文本指令
+ * @param Show Total Window
  * @parent Encyclopedia Scene Options
  * @type boolean
- * @desc Ture-允许使用如\I[n]图标或\C[n]颜色之类等指令，但失去字体缩放功能。False-会自动缩放过长的文本以显示完整信息。
- * @default false
+ * @desc If true, will display a total window
+ * @default true
  *
  * @param Number Entries
  * @text 是否在信息列表中加入编号
@@ -2936,6 +3043,12 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type boolean
  * @desc If true, will not leave space for Touch UI buttons if Touch UI is disabled
  * @default false
+ *
+ * @param Disable Scroll Select
+ * @parent Encyclopedia Scene Options
+ * @type boolean
+ * @desc If true, will disable selecting an entry when no action is possible other than scroll
+ * @default true
  *
  * @param List Window On Right
  * @parent Encyclopedia Scene Options
@@ -3015,84 +3128,6 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc If the Encyclopedia Windows should have a transparent background
  * @parent Encyclopedia Scene Options
  *
- * @param Category Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the category window
- * @parent Encyclopedia Scene Options
- *
- * @param Subcategory Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the subcategory window
- * @parent Encyclopedia Scene Options
- *
- * @param List Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the list window
- * @parent Encyclopedia Scene Options
- *
- * @param Total Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the total window
- * @parent Encyclopedia Scene Options
- *
- * @param Display Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the display window
- * @parent Encyclopedia Scene Options
- *
- * @param Purchase Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the purchase window
- * @parent Encyclopedia Scene Options
- *
- * @param List Windowskin
- * @parent Encyclopedia Scene Options 
- * @type file
- * @dir img/
- * @desc The windowskin to use for the list window. Leave blank to use default.
- *
- * @param Display Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the display window. Leave blank to use default.
- *
- * @param Total Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the total window. Leave blank to use default.
- *
- * @param Category Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the Category window. Leave blank to use default.
- *
- * @param Subcategory Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the Subcategory window. Leave blank to use default.
- *
- * @param Purchase Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the purchase window. Leave blank to use default.
- *
  * @param Default Enemy Battle BGM
  * @parent Encyclopedia Scene Options
  * @type struct<BGM>
@@ -3103,6 +3138,62 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type struct<Background>[]
  * @default []
  * @desc Set up scene backgrounds for the various categories here
+ *
+ * @param Actor Sprite Width
+ * @desc The width to give an actor sprite if set to display
+ * @type number
+ * @min 0
+ * @default 48
+ * @parent Encyclopedia Scene Options
+ *
+ * @param Actor Sprite Height
+ * @desc The height to give an actor sprite if set to display
+ * @type number
+ * @min 0
+ * @default 48
+ * @parent Encyclopedia Scene Options
+ *
+ * @param Actor Sv Motion
+ * @parent Encyclopedia Scene Options
+ * @type select
+ * @option walk
+ * @value 0
+ * @option wait
+ * @value 1
+ * @option chant
+ * @value 2
+ * @option guard
+ * @value 3
+ * @option damage
+ * @value 4
+ * @option evade
+ * @value 5
+ * @option thrust
+ * @value 6
+ * @option swing
+ * @value 7
+ * @option missile
+ * @value 8
+ * @option skill
+ * @value 9
+ * @option spell
+ * @value 10
+ * @option item
+ * @value 11
+ * @option escape
+ * @value 12
+ * @option victory
+ * @value 13
+ * @option dying
+ * @value 14
+ * @option abnormal
+ * @value 15
+ * @option sleep
+ * @value 16
+ * @option dead
+ * @value 17
+ * @desc The motion to use when displaying actor sv sprite
+ * @default 13
  *
  * @param Display Window Options
  * @text 信息显示设置
@@ -3116,6 +3207,7 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Gold
  * @option Drops
  * @option Skills
+ * @option Traits
  * @option Note
  * @option Sketch
  * @option Discover Date
@@ -3125,7 +3217,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Note Header
  * @option Sketch Header
  * @option Skills Header
+ * @option Traits Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
+ * @option Kill Count
  * @desc 选择敌人类别信息所显示的项目。如：敌人名称、获得经验、物品掉落等。
  * @default ["Name","Stats","Exp","Gold","Drops","Note","Sketch"]
  * @parent Display Window Options
@@ -3149,6 +3247,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Note Header
  * @option Description Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc 选择物品类别信息所显示的项目。如：价格、持有数、使用效果等。
  * @default ["Name","Icon","Price","Key Item","Possession","Consumable","Success Rate","Effects","Description","Note"]
  * @parent Display Window Options
@@ -3173,6 +3275,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Description Header
  * @option Stat Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc 选择防具类别信息所显示的项目。如：装备类型、装备能力值等。
  * @default ["Name","Icon","Price","Equip Type","Possession","Armor Type","Stats","Traits","Description","Note"]
  * @parent Display Window Options
@@ -3197,6 +3303,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Description Header
  * @option Stat Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc 选择武器类别信息所显示的项目。如：武器类型、攻击属性、武器能力值等。
  * @default ["Name","Icon","Price","Equip Type","Possession","Weapon Type","Stats","Traits","Description","Note"]
  * @parent Display Window Options
@@ -3219,6 +3329,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Note Header
  * @option Description Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc 选择技能类别信息所显示的项目。如：技能类型、MP或TP消耗、命中率等。
  * @default ["Name","Icon","Type","Costs","Success Rate","TP Gain","Effects","Description","Note"]
  * @parent Display Window Options
@@ -3239,6 +3353,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Trait Header
  * @option Note Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc 选择状态类别信息所显示的项目。如：持续时间、解除方式等。
  * @default ["Name","Icon","Duration","Battle End Removal","Walking Removal","Damage Removal","Traits","Note"]
  * @parent Display Window Options
@@ -3247,6 +3365,8 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type select[]
  * @option Name
  * @option Face
+ * @option Walk Sprite
+ * @option Battle Sprite
  * @option Nickname
  * @option Class
  * @option Initial Level
@@ -3261,6 +3381,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Trait Header
  * @option Note Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc The information and order to display when drawing an actor entry
  * @default ["Name","Face","Nickname","Class","Profile","Stats","Traits","Note"]
  * @parent Display Window Options
@@ -3277,6 +3401,7 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Description Header
  * @option Custom Header
  * @option Blank Line
+ * @option Custom Space
  * @desc 选择自定义类别信息所显示的项目。目前只支持：信息名称、信息描述和展示图片。
  * @default ["Name","Description","Sketch"]
  * @parent Display Window Options
@@ -3331,6 +3456,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default ["Attack Speed","Attack Times","Attack Element","Attack States","Party Ability","Seal Skill Types","Add Skill Types","Add Skills","Seal Skills","State Resist"]
  * @parent Display Window Options
  *
+ * @param Custom Spacing Amount
+ * @parent Encyclopedia Scene Options
+ * @type number
+ * @min 0
+ * @desc When Display Info has option Custom Space, it will add this amount of pixels as blank space.
+ * @default 10
+ *
  * @param Strip Newlines In Description
  * @text 空格换行
  * @type boolean
@@ -3347,6 +3479,12 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @param Center Icons
  * @type boolean
  * @desc If true, icon display will be centered in the encyclopedia
+ * @default false
+ * @parent Display Window Options
+ *
+ * @param Center Face
+ * @type boolean
+ * @desc If true, actor face display will be centered in the encyclopedia
  * @default false
  * @parent Display Window Options
  *
@@ -3412,6 +3550,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type color
  * @desc The second color of the header line color gradient
  * @default 0
+ * @parent Text Options
+ *
+ * @param New Text
+ * @desc Text to show when an entry is updated
+ * @default \c[14]New!\c[0]
  * @parent Text Options
  *
  * @param Yes Text
@@ -3492,12 +3635,6 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default 基本技能
  * @parent Text Options
  *
- * @param Drops Text
- * @text 战利品的描述
- * @desc 击败敌人后掉落的战利品的描述。
- * @default 战利品:
- * @parent Text Options
- *
  * @param Show Drop Chances
  * @text 显示掉落几率
  * @desc 是否在百科全书中显示敌人战利品的掉落几率。
@@ -3509,12 +3646,6 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @text 掉落几率的描述
  * @desc 战利品掉落几率的描述。
  * @default 掉落几率:
- * @parent Text Options
- *
- * @param Sketch Text
- * @text 显示图片的描述
- * @desc 显示图片的描述。
- * @default 图鉴:
  * @parent Text Options
  *
  * @param Note Text
@@ -3955,6 +4086,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default 备注
  * @parent Text Options
  *
+ * @param Bestiary Traits Header Text
+ * @desc Text to show in bestiary's traits header
+ * @default Traits
+ * @parent Text Options
+ *
  * @param Bestiary Stats Header Text
  * @text 敌人能力类的标题描述
  * @desc 敌人能力类的标题描述。
@@ -4014,6 +4150,63 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc If true, stats/exp/gold display accurate to the current difficulty (requires CGMZ Difficulty)
  * @default true
  * @parent Integration Options
+ * 
+ * @param Discover Toast
+ * @desc The [CGMZ] Toast Manager preset id to use when a new entry is discovered.
+ * @parent Integration Options
+ *
+ * @param Kill Count Text
+ * @desc Text to show when describing the enemy kill count
+ * @default Defeated:
+ * @parent Integration Options
+ *
+ * @param Category Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the category window
+ *
+ * @param Subcategory Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the subcategory window
+ *
+ * @param List Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the list window
+ *
+ * @param Total Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the total window
+ *
+ * @param Display Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the display window
+ *
+ * @param Purchase Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the purchase window
+ *
+ * @param Category Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the category window
+ *
+ * @param Subcategory Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the subcategory window
+ *
+ * @param List Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the list window
+ *
+ * @param Total Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the total window
+ *
+ * @param Display Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the display window
+ *
+ * @param Purchase Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the purchase window
 */
 /*~struct~Category:zh-CN
  * @param Category Name
@@ -4128,12 +4321,14 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @text 自定义信息ID
  * @type number
  * @desc 自定义信息所在类别中的顺序ID，具体见【使用说明】。
- * @default 1
+ * @default 0
+ *
+ * @param name
+ * @desc The name of the entry to discover (if id set to 0)
  *
  * @param symbol
  * @text 命令字符
  * @desc 自定义信息所属类别的类别字符（Category Symbol）。
- * @default 
 */
 /*~struct~BGM:zh-CN
  * @param name
@@ -4181,6 +4376,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraItemInfo:zh-CN
  * @param id
@@ -4205,6 +4415,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraWeaponInfo:zh-CN
  * @param id
@@ -4229,6 +4454,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraArmorInfo:zh-CN
  * @param id
@@ -4253,6 +4493,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraSkillInfo:zh-CN
  * @param id
@@ -4277,6 +4532,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraStateInfo:zh-CN
  * @param id
@@ -4301,6 +4571,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraActorInfo:zh-CN
  * @param id
@@ -4312,15 +4597,59 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
+*/
+/*~struct~ExtraImage:zh-CN
+ * @param File
+ * @type file
+ * @dir img/
+ * @desc The image to display
+ * 
+ * @param Image Width
+ * @type number
+ * @min 0
+ * @default 0
+ * @desc The width to make the image
+ * 
+ * @param Image Height
+ * @type number
+ * @min 0
+ * @default 0
+ * @desc The height to make the image
+ * 
+ * @param Alignment
+ * @type select
+ * @option left
+ * @option center
+ * @option right
+ * @default center
+ * @desc Align the image to the left, center, or right of the display window?
+ * 
+ * @param Display Block
+ * @type boolean
+ * @default true
+ * @desc If true, this element will not let other elements into its height area
 */
 /*~struct~Background:zh-CN
  * @param symbol
  * @desc The category symbol the background is for. See documentation.
  * 
- * @param image
- * @type file
- * @dir img/
- * @desc The image file to use for the background for the given category
+ * @param Preset
+ * @desc The [CGMZ] Scene Backgrounds preset id to use for the background
 */
 /*:es
  * @author Casper Gaming
@@ -4337,10 +4666,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * alfa, ademas de otras cosas geniales!
  * https://www.patreon.com/CasperGamingRPGM
  * ============================================================================
- * Versión: 1.11.0
+ * Versión: 1.14.0
  * ----------------------------------------------------------------------------
  * Compatibilidad: Sólo probado con mis CGMZ plugins.
- * Hecho para RPG Maker MZ 1.8.0
+ * Hecho para RPG Maker MZ 1.9.0
  * ----------------------------------------------------------------------------
  * Descripción: Este plugin crea una poderosa enciclopedia para tu juego, con 
  * categorías predeterminadas que incluyen bestiario, artículos, armaduras,  
@@ -4362,6 +4691,14 @@ Purchase entry for \c[3]%price \g\c[0]?
  * To enter buy mode, you can add an extra "true" onto the end of the prepare
  * script call. For example:
  * SceneManager.prepareNextScene(categoría, true);
+ * -------------------------Adding to Battle-----------------------------------
+ * To easily call the encyclopedia from the battle, use [CGMZ] Battle Command 
+ * Window and use the following script in its parameters if in a party
+ * command:
+ * this.showCGMZEncyclopedia(true);
+ *
+ * If you are instead calling it from an actor command, use the js:
+ * this.showCGMZEncyclopedia(false);
  * -------------------------Comandos de Plugin---------------------------------
  * • Descubrir Enemigo
  * Este comando descubre al enemigo con la identificación proporcionada.
@@ -4427,17 +4764,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * states, actors.
  * -----------------------Category Backgrounds---------------------------------
  * To show a background image in the Encyclopedia Scene for a specific
- * category, set the symbol to the category symbol and the image to the image
- * file you want to use.
+ * category, set the symbol to the category symbol and the preset to match a
+ * [CGMZ] Scene Backgrounds preset id.
  *
- * The symbols for the default categories are:
- * bestiary
- * items
- * armors
- * weapons
- * skills
- * states
- * actors
+ * The symbols for the default categories are: bestiary, items, armors,
+ * weapons, skills, states, actors
  * ------------------------Etiquetas de notas----------------------------------
  * <cgmzdesc:[description]> - Pone una "nota" en la página de visualización de 
  * la enciclopedia
@@ -4451,6 +4782,9 @@ Purchase entry for \c[3]%price \g\c[0]?
  *
  * In an entry's price text, you can use %price which will be substituted for
  * the amount of the entry.
+ *
+ * In the toast manager preset, you can use %name which will be replaced by
+ * the encyclopedia entry name.
  * ----------------Opción de multiplicador de icono grande---------------------
  * Esta opción cambia el tamaño del icono que se muestra de forma 
  * predeterminada  para elementos, armaduras, armas, estados y habilidades.
@@ -4460,16 +4794,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * Líneas desplazadas: 2, use el tamaño del multiplicador: 2.2
  * Líneas desplazadas: 3, use el tamaño del multiplicador: 3.3
  * ---------------------------Date Formats-------------------------------------
- * The following numbers correspond to the following date formats:
- * 0: MM/DD/YYYY     (ex: 1/20/2001)
- * 1: DD/MM/YYYY     (ex: 20/1/2001)
- * 2: YYYY/MM/DD     (ex: 2001/1/20)
- * 3: Month DD, YYYY (ex: January 20, 2001)
- * 4: DD Month YYYY  (ex: 20 January 2001)
- * 5: Mon. DD, YYYY  (ex: Jan 20, 2001)
- * 6: DD Mon. YYYY   (ex: 20 Jan 2001)
- * 7: MM/DD          (ex: 1/20)
- * 8: DD/MM          (ex: 20/1)
+ * * The following numbers correspond to the following date formats:
+ * 0, 1, 2: Numeric day, month, year
+ * 3, 4: Numeric day, long month, numeric year
+ * 5, 6: Numeric day, short month, numeric year
+ * 7, 8: Numeric day, month
+ *
+ * Date formats will take the user's locale into account.
  * -------------------------Partidas guardadas---------------------------------
  * Este plugin tiene compatibilidad limitada con juegos guardados. Las nuevas 
  * entradas de cualquier categoría serán reconocidas automáticamente por los
@@ -4478,149 +4809,41 @@ Purchase entry for \c[3]%price \g\c[0]?
  * ejemplo), esto debería funcionar en un juego guardado. Sin embargo, si
  * cambias un enemigo o eliminas un enemigo, esto causaría problemas en las
  * partidas guardadas.
- * -----------------------Historial de Versiones-------------------------------
- * 1.1.0
- * - Se agregaron controles adicionales durante la batalla para descubrir
- *   enemigos.
+ * --------------------------Latest Version------------------------------------
+ * Hi all, this latest version adds New! marker text for entries that have been
+ * discovered but not yet viewed by the player, so they will be aware of the
+ * new entries.
  *
- * 1.1.1
- * - La ventana de totales fijos es demasiado grande en algunos casos
- * - Elementos de la ventana de lista fija que no tienen relleno
- * - Se corrigió el error con la ventana de la lista que no se desplazaba 
- *   hacia arriba después de cancelar
+ * You can now hide the total window in the scene, giving more space for the
+ * other windows and reducing clutter if the total is not important for your
+ * game.
  *
- * 1.1.2
- * - Este complemento ahora inicia una verificación de logros de CGMZ después 
- *   del descubrimiento
+ * It also added a plugin command to change a custom entry name. This will also
+ * set the Display Name of that entry. You can also now discover custom entries
+ * by their name instead of by their id. This was added to both Discover Custom
+ * and Discover Custom Batch plugin commands, how it works is that if the id is
+ * set to 0, it will instead go by the new name parameter.
  *
- * 1.1.3
- * - Se corrigió un error con los efectos de ganancia de TP que se dibujaban 
- *   sobre las descripciones de los artículos
- * - Los espacios en blanco ahora se recortan de la unidad monetaria para el
- *   encabezado en bestiario
+ * This plugin now also shows [CGMZ] Currency System currency drops from enemies
+ * in the bestiary. This includes the currency name and icon in the currency
+ * color.
  *
- * 1.2.0
- * - Las nuevas entradas y los datos personalizados ahora se reconocen 
- *   automáticamente en juegos guardados
- * - Se agregó la capacidad de usar códigos de texto en descripciones, 
- *   categorías y listas de elementos
- * - Opción agregada para cambiar el color del texto de la etiqueta
- * - Opción agregada para cambiar la alineación del texto de la ventana de totales
- * - Opción agregada para personalizar la altura de la ventana de categoría y el 
- *   recuento de columnas
- * - Comando de complemento agregado para descubrir múltiples entradas a la vez
- * - Se corrigió un error con el tamaño de imagen personalizado incorrecto para el 
- *   primer sorteo
- * - Error de visualización fijo para elementos con efectos de habilidad de aprendizaje
- * - Se corrigió el error de visualización con los efectos de grupo doble de Drop Item
- *   (Soltar Artículo)
- * - Compatibilidad con VS Core (arreglo para espacios extraños entre ventanas)
+ * The Change Description plugin command for custom entries has a new mode
+ * option now, with both set and add modes. Set works the same way as previous,
+ * while add mode will append the new text onto the existing description.
  *
- * 1.2.1
- * - Error corregido con columnas para otras ventanas de comandos horizontales
- *
- * 1.2.2
- * - Se corrigió un error con las categorías de inclusión (solo cuando se desactiva) 
- *   que se comportaba de manera extraña.
- *
- * 1.3.0
- * - Se agregó la capacidad de elegir qué información mostrar para cada categoría
- * - Se agregó la capacidad de reordenar la información que se muestra para cada categoría
- * - Se agregó un comando de complemento de descubrimiento por lotes personalizado
- * - Se agregó la capacidad de desactivar el descubrimiento automático
- * - Aumento de la altura máxima de la ventana de visualización
- * - Error solucionado con entradas personalizadas que no tenían descripciones
- * - Error solucionado con símbolos en mayúsculas para categorías personalizadas
- * - La documentación ya no se desplaza horizontalmente
- * - Actualización de la documentación para que sea más fácil de leer/explicar más
- *
- * 1.4.0
- * - Ahora puede elegir qué categoría comienza seleccionada cuando la escena
- * abre
- * - Se agregó un comando de complemento para almacenar el% de finalización en una variable
- * - Comando de complemento agregado para cambiar la descripción de entrada personalizada
- *
- * 1.5.0
- * - Opción agregada para mostrar un nombre diferente en la lista y ventanas de visualización
- * para entradas personalizadas
- * - Las entradas personalizadas ahora admiten varias imágenes en lugar de una sola
- * - Comando de complemento agregado para cambiar el boceto de entrada personalizado
- * - Se solucionó el problema al agregar este complemento en un juego guardado que no
- * Disponer previamente de la enciclopedia.
- *
- * 1.6.0
- * - Opción agregada para ocultar entradas no descubiertas de la ventana de lista
- * - Added option to customize the sort order in the list window
- * - Added text code for displaying sketch images mixed in with
- *   description for custom entries
- * - Updated color parameters to use new text color selector
- *
- * 1.6.1
- * - Bugfix for missing parameters if using Chinese language
- *
- * 1.7.0
- * - Added new built in category: Actors
- * - Added option to center large icons
- * - Added option to show list window on right
- * - Added option to disable Touch UI space at top
- * - Added ability to change window padding for each window
- * - Added ability to change windowskin for each window
- * - Added ability to change the list window width
- * - Added Spanish language support
- *
- * 1.7.1
- * - Bugfix for incorrect states being included in some cases
- * - Bugfix for font not resetting when drawing a new entry
- * - Bugfix for certain cases where touch UI could cause list window
- *   scroll to be incorrect
+ * An integration with [CGMZ] Toast Manager was also added, and you can now
+ * show a toast window when a new entry in the encyclopedia is discovered. This
+ * works for all categories.
  * 
- * 1.7.2
- * - Bugfix for crash when drawing actors with center icons option on
- * 
- * 1.7.3
- * - Bugfix for actor entries resetting after first save
- * 
- * 1.8.0
- * - Added ability to play BGMs while viewing enemies in bestiary
- * - Added option to display the date an entry was discovered
- * - Added option to autodiscover skills when they are used
- * - This plugin can now integrate with CGMZ Difficulty to show enemy
- *   stats/gold/exp based on the current difficulty
- * - This plugin now reports JSON parameter errors instead of crashing. If 
- *   something isn't working right, please check dev tool console before
- *   reporting a bug.
- * 
- * 1.9.0
- * - Added option to display the skills an enemy can use
- * - Added option to have a custom scene background image for each category
- * - Added option to change header line gradient colors
- * - Added option to have windows be transparent
- * - Added plugin command to check if an entry has been discovered
- * - Added option to automatically hide entries that have no name or a user
- *   defined string in their name
- * - Added option to make entries in the encyclopedia opt-in
- * 
- * 1.9.1
- * - Fixed crash when selecting empty enemy entry (all entries hidden)
- * - Fix bug with empty entry showing last selected non-empty entry info
- * 
- * 1.10.0
- * - Added subcategories
- * - Custom entries can now display main-category object data
- * - Added custom headers and info lines to custom entries
- * - Added option to change category window alignment
- * 
- * 1.11.0
- * - Added a way to purchase encyclopedia entries for gold + numerous
- *   options related to this new functionality
- * - Added option to use custom images for enemies
- * - Added option to use custom icon image for item/wep/armor/skill/state
- * - Added plugin command to discover entries by a range
- * - Added option to sort encyclopedia entries by discover date
- * - Added option to display TP costs in skills
- * - Fix potential crash when changing categories really quickly
- * - Now automatically discovers actors in starting party
- * - Converted deprecated cgmz temp calls to cgmz utils calls
+ * Version 1.14.0
+ * - Added New marker text for new entries
+ * - Added option to hide the total window
+ * - Added plugin command to change custom entry name
+ * - Added integration with [CGMZ] Currency System
+ * - Added integration with [CGMZ] Toast Manager
+ * - Change Description now supports appending text
+ * - Discovering custom entries now possible by name
  *
  * @command DiscoverEnemy
  * @text Descubrir enemigo
@@ -4744,12 +4967,14 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @text Número de Id de las entradas
  * @type number
  * @desc El número de identificación de la entrada a descubrir.
- * @default 1
+ * @default 0
+ *
+ * @arg name
+ * @desc The name of the entry to discover (if id set to 0)
  *
  * @arg symbol
  * @text Símbolo
  * @desc El símbolo de categoría de la entrada a descubrir.
- * @default 
  *
  * @command Discover Custom Batch
  * @text Descubrir lote personalizado
@@ -4843,6 +5068,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc La nueva descripción de la entrada.
  * @default ""
  *
+ * @arg Mode
+ * @type select
+ * @option set
+ * @option add
+ * @desc If add mode, will append the new description onto the old description.
+ * @default set
+ *
  * @command Change Sketch
  * @text Cambiar Bosquejo
  * @desc Cambiar un croquis/bosquejo de entrada personalizado.
@@ -4861,6 +5093,18 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @dir img/
  * @desc El nuevo boceto para la entrada.
  * @default []
+ *
+ * @command Change Name
+ * @desc Change a custom entry name
+ *
+ * @arg Name
+ * @desc The name of the entry to change
+ *
+ * @arg Symbol
+ * @desc The Category Symbol the entry belongs to
+ *
+ * @arg New Name
+ * @desc The new entry name.
  *
  * @command Check Discovered
  * @desc Check if an entry has been discovered
@@ -4953,6 +5197,12 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type boolean
  * @desc If true, only entries with the <cgmzencyclopediahide> notetag will be included in the encyclopedia
  * @default false
+ * @parent Functional Options
+ * 
+ * @param Encyclopedia Item
+ * @type item
+ * @desc Item that, when used, will open the encyclopedia scene
+ * @default 0
  * @parent Functional Options
  *
  * @param Category Options
@@ -5160,12 +5410,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc If true, will display an "all" subcategory
  * @default true
  *
- * @param List Window Enable Text Codes
- * @text Ventana de lista Habilitar códigos de texto
+ * @param Show Total Window
  * @parent Encyclopedia Scene Options
  * @type boolean
- * @desc ¿Permitir códigos de texto en la ventana de lista? Esto ya no reducirá automáticamente el texto para que quepa.
- * @default false
+ * @desc If true, will display a total window
+ * @default true
  *
  * @param Number Entries
  * @text Entradas de números
@@ -5209,6 +5458,12 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type boolean
  * @desc If true, will not leave space for Touch UI buttons if Touch UI is disabled
  * @default false
+ *
+ * @param Disable Scroll Select
+ * @parent Encyclopedia Scene Options
+ * @type boolean
+ * @desc If true, will disable selecting an entry when no action is possible other than scroll
+ * @default true
  *
  * @param List Window On Right
  * @parent Encyclopedia Scene Options
@@ -5294,84 +5549,6 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc If the Encyclopedia Windows should have a transparent background
  * @parent Encyclopedia Scene Options
  *
- * @param Category Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the category window
- * @parent Encyclopedia Scene Options
- *
- * @param Subcategory Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the subcategory window
- * @parent Encyclopedia Scene Options
- *
- * @param List Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the list window
- * @parent Encyclopedia Scene Options
- *
- * @param Total Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the total window
- * @parent Encyclopedia Scene Options
- *
- * @param Display Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the display window
- * @parent Encyclopedia Scene Options
- *
- * @param Purchase Window Padding
- * @type number
- * @min 0
- * @default 12
- * @desc The window padding for the purchase window
- * @parent Encyclopedia Scene Options
- *
- * @param List Windowskin
- * @parent Encyclopedia Scene Options 
- * @type file
- * @dir img/
- * @desc The windowskin to use for the list window. Leave blank to use default.
- *
- * @param Display Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the display window. Leave blank to use default.
- *
- * @param Total Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the total window. Leave blank to use default.
- *
- * @param Category Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the Category window. Leave blank to use default.
- *
- * @param Subcategory Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the Subcategory window. Leave blank to use default.
- *
- * @param Purchase Windowskin
- * @parent Encyclopedia Scene Options
- * @type file
- * @dir img/
- * @desc The windowskin to use for the purchase window. Leave blank to use default.
- *
  * @param Default Enemy Battle BGM
  * @parent Encyclopedia Scene Options
  * @type struct<BGM>
@@ -5382,6 +5559,62 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type struct<Background>[]
  * @default []
  * @desc Set up scene backgrounds for the various categories here
+ *
+ * @param Actor Sprite Width
+ * @desc The width to give an actor sprite if set to display
+ * @type number
+ * @min 0
+ * @default 48
+ * @parent Encyclopedia Scene Options
+ *
+ * @param Actor Sprite Height
+ * @desc The height to give an actor sprite if set to display
+ * @type number
+ * @min 0
+ * @default 48
+ * @parent Encyclopedia Scene Options
+ *
+ * @param Actor Sv Motion
+ * @parent Encyclopedia Scene Options
+ * @type select
+ * @option walk
+ * @value 0
+ * @option wait
+ * @value 1
+ * @option chant
+ * @value 2
+ * @option guard
+ * @value 3
+ * @option damage
+ * @value 4
+ * @option evade
+ * @value 5
+ * @option thrust
+ * @value 6
+ * @option swing
+ * @value 7
+ * @option missile
+ * @value 8
+ * @option skill
+ * @value 9
+ * @option spell
+ * @value 10
+ * @option item
+ * @value 11
+ * @option escape
+ * @value 12
+ * @option victory
+ * @value 13
+ * @option dying
+ * @value 14
+ * @option abnormal
+ * @value 15
+ * @option sleep
+ * @value 16
+ * @option dead
+ * @value 17
+ * @desc The motion to use when displaying actor sv sprite
+ * @default 13
  *
  * @param Display Window Options
  * @text Opciones de la ventana de visualización
@@ -5395,6 +5628,7 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Gold
  * @option Drops
  * @option Skills
+ * @option Traits
  * @option Note
  * @option Sketch
  * @option Discover Date
@@ -5404,7 +5638,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Note Header
  * @option Sketch Header
  * @option Skills Header
+ * @option Traits Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
+ * @option Kill Count
  * @desc La información y el orden que se muestra al dibujar una entrada de bestiario.
  * @default ["Name","Stats","Exp","Gold","Drops","Note","Sketch"]
  * @parent Display Window Options
@@ -5428,6 +5668,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Note Header
  * @option Description Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc La información y el orden que se mostrará al dibujar una entrada de artículo.
  * @default ["Name","Icon","Price","Key Item","Possession","Consumable","Success Rate","Effects","Description","Note"]
  * @parent Display Window Options
@@ -5452,6 +5696,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Description Header
  * @option Stat Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc La información y el orden que se mostrará al dibujar una entrada de la armadura.
  * @default ["Name","Icon","Price","Equip Type","Possession","Armor Type","Stats","Traits","Description","Note"]
  * @parent Display Window Options
@@ -5476,6 +5724,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Description Header
  * @option Stat Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc La información y el orden que se mostrará al dibujar una entrada del arma.
  * @default ["Name","Icon","Price","Equip Type","Possession","Weapon Type","Stats","Traits","Description","Note"]
  * @parent Display Window Options
@@ -5498,6 +5750,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Note Header
  * @option Description Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc La información y el orden que se mostrará al dibujar una entrada de la habilidad.
  * @default ["Name","Icon","Type","Costs","Success Rate","TP Gain","Effects","Description","Note"]
  * @parent Display Window Options
@@ -5518,6 +5774,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Trait Header
  * @option Note Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc La información y el orden que se mostrará al dibujar una entrada del estado.
  * @default ["Name","Icon","Duration","Battle End Removal","Walking Removal","Damage Removal","Traits","Note"]
  * @parent Display Window Options
@@ -5526,6 +5786,8 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type select[]
  * @option Name
  * @option Face
+ * @option Walk Sprite
+ * @option Battle Sprite
  * @option Nickname
  * @option Class
  * @option Initial Level
@@ -5540,6 +5802,10 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Trait Header
  * @option Note Header
  * @option Blank Line
+ * @option Custom Space
+ * @option Custom Info
+ * @option Custom Header
+ * @option Custom Image
  * @desc The information and order to display when drawing an actor entry
  * @default ["Name","Face","Nickname","Class","Profile","Stats","Traits","Note"]
  * @parent Display Window Options
@@ -5556,6 +5822,7 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @option Description Header
  * @option Custom Header
  * @option Blank Line
+ * @option Custom Space
  * @desc La información y el orden que se mostrará al dibujar una entrada personalizada.
  * @default ["Name","Description","Sketch"]
  * @parent Display Window Options
@@ -5610,6 +5877,13 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default ["Attack Speed","Attack Times","Attack Element","Attack States","Party Ability","Seal Skill Types","Add Skill Types","Add Skills","Seal Skills","State Resist"]
  * @parent Display Window Options
  *
+ * @param Custom Spacing Amount
+ * @parent Encyclopedia Scene Options
+ * @type number
+ * @min 0
+ * @desc When Display Info has option Custom Space, it will add this amount of pixels as blank space.
+ * @default 10
+ *
  * @param Strip Newlines In Description
  * @text Quitar líneas nuevas en la descripción
  * @type boolean
@@ -5626,6 +5900,12 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @param Center Icons
  * @type boolean
  * @desc If true, icon display will be centered in the encyclopedia
+ * @default false
+ * @parent Display Window Options
+ *
+ * @param Center Face
+ * @type boolean
+ * @desc If true, actor face display will be centered in the encyclopedia
  * @default false
  * @parent Display Window Options
  *
@@ -5694,6 +5974,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @type color
  * @desc The second color of the header line color gradient
  * @default 0
+ * @parent Text Options
+ *
+ * @param New Text
+ * @desc Text to show when an entry is updated
+ * @default \c[14]New!\c[0]
  * @parent Text Options
  *
  * @param Yes Text
@@ -5774,12 +6059,6 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default Basic
  * @parent Text Options
  *
- * @param Drops Text
- * @text Texto - Recompensas/Botín
- * @desc Texto para mostrar al describir las recompensas de un enemigo.
- * @default Drops:
- * @parent Text Options
- *
  * @param Show Drop Chances
  * @text Mostrar probabilidad de caída
  * @desc Determinar si las posibilidades de caída se muestran en la enciclopedia.
@@ -5791,12 +6070,6 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @text Texto - Probabilidad de caída
  * @desc Texto para mostrar al describir la probabilidad de caída de un artículo.
  * @default Chance:
- * @parent Text Options
- *
- * @param Sketch Text
- * @text Texto - Bosquejo/Croquis
- * @desc Texto para mostrar al describir un boceto de un elemento.
- * @default Sketch:
  * @parent Text Options
  *
  * @param Note Text
@@ -6237,6 +6510,11 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @default Notes
  * @parent Text Options
  *
+ * @param Bestiary Traits Header Text
+ * @desc Text to show in bestiary's traits header
+ * @default Traits
+ * @parent Text Options
+ *
  * @param Bestiary Stats Header Text
  * @text Texto - Encabezado de estadísticas de bestiario
  * @desc Texto para mostrar en el encabezado de estadísticas del bestiario.
@@ -6296,6 +6574,63 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @desc If true, stats/exp/gold display accurate to the current difficulty (requires CGMZ Difficulty)
  * @default true
  * @parent Integration Options
+ * 
+ * @param Discover Toast
+ * @desc The [CGMZ] Toast Manager preset id to use when a new entry is discovered.
+ * @parent Integration Options
+ *
+ * @param Kill Count Text
+ * @desc Text to show when describing the enemy kill count
+ * @default Defeated:
+ * @parent Integration Options
+ *
+ * @param Category Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the category window
+ *
+ * @param Subcategory Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the subcategory window
+ *
+ * @param List Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the list window
+ *
+ * @param Total Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the total window
+ *
+ * @param Display Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the display window
+ *
+ * @param Purchase Window Settings
+ * @parent Integration Options
+ * @desc [CGMZ] Window Settings preset id to use for the purchase window
+ *
+ * @param Category Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the category window
+ *
+ * @param Subcategory Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the subcategory window
+ *
+ * @param List Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the list window
+ *
+ * @param Total Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the total window
+ *
+ * @param Display Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the display window
+ *
+ * @param Purchase Window Background
+ * @parent Integration Options
+ * @desc [CGMZ] Window Backgrounds preset id to use for the purchase window
 */
 /*~struct~Category:es
  * @param Category Name
@@ -6410,12 +6745,14 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @text Identificación
  * @type number
  * @desc El número de identificación de la entrada personalizada para descubrir.
- * @default 1
+ * @default 0
+ *
+ * @param name
+ * @desc The name of the entry to discover (if id set to 0)
  *
  * @param symbol
  * @text Símbolo
  * @desc El símbolo de categoría de la entrada personalizada para descubrir.
- * @default 
 */
 /*~struct~BGM:es
  * @param name
@@ -6463,6 +6800,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraItemInfo:es
  * @param id
@@ -6487,6 +6839,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraWeaponInfo:es
  * @param id
@@ -6511,6 +6878,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraArmorInfo:es
  * @param id
@@ -6535,6 +6917,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraSkillInfo:es
  * @param id
@@ -6559,6 +6956,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraStateInfo:es
  * @param id
@@ -6583,6 +6995,21 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
 */
 /*~struct~ExtraActorInfo:es
  * @param id
@@ -6594,18 +7021,62 @@ Purchase entry for \c[3]%price \g\c[0]?
  * @min -9999
  * @default -1
  * @desc Price the player can pay to buy this entry (in buy mode)
+ * 
+ * @param Custom Info
+ * @type multiline_string[]
+ * @default []
+ * @desc Set up custom lines of text info here
+ * 
+ * @param Custom Header
+ * @type text[]
+ * @default []
+ * @desc Set up custom headers here
+ * 
+ * @param Custom Images
+ * @type struct<ExtraImage>[]
+ * @default []
+ * @desc Set up custom images here
+*/
+/*~struct~ExtraImage:es
+ * @param File
+ * @type file
+ * @dir img/
+ * @desc The image to display
+ * 
+ * @param Image Width
+ * @type number
+ * @min 0
+ * @default 0
+ * @desc The width to make the image
+ * 
+ * @param Image Height
+ * @type number
+ * @min 0
+ * @default 0
+ * @desc The height to make the image
+ * 
+ * @param Alignment
+ * @type select
+ * @option left
+ * @option center
+ * @option right
+ * @default center
+ * @desc Align the image to the left, center, or right of the display window?
+ * 
+ * @param Display Block
+ * @type boolean
+ * @default true
+ * @desc If true, this element will not let other elements into its height area
 */
 /*~struct~Background:es
  * @param symbol
  * @desc The category symbol the background is for. See documentation.
  * 
- * @param image
- * @type file
- * @dir img/
- * @desc The image file to use for the background for the given category
+ * @param Preset
+ * @desc The [CGMZ] Scene Backgrounds preset id to use for the background
 */
 Imported.CGMZ_Encyclopedia = true;
-CGMZ.Versions["Encyclopedia and Bestiary"] = "1.11.0";
+CGMZ.Versions["Encyclopedia and Bestiary"] = "1.14.0";
 CGMZ.Encyclopedia = {};
 CGMZ.Encyclopedia.parameters = PluginManager.parameters('CGMZ_Encyclopedia');
 CGMZ.Encyclopedia.IncludeBestiary = (CGMZ.Encyclopedia.parameters["Include Bestiary"] === "true");
@@ -6625,12 +7096,13 @@ CGMZ.Encyclopedia.AutodiscoverStates = (CGMZ.Encyclopedia.parameters["Autodiscov
 CGMZ.Encyclopedia.AutodiscoverActors = (CGMZ.Encyclopedia.parameters["Autodiscover Actors"] === "true");
 CGMZ.Encyclopedia.NumberEntries = (CGMZ.Encyclopedia.parameters["Number Entries"] === "true");
 CGMZ.Encyclopedia.ShowDropChances = (CGMZ.Encyclopedia.parameters["Show Drop Chances"] === "true");
-CGMZ.Encyclopedia.ListWindowEnableTextCodes = (CGMZ.Encyclopedia.parameters["List Window Enable Text Codes"] === 'true');
 CGMZ.Encyclopedia.StripNewlinesInDescription = (CGMZ.Encyclopedia.parameters["Strip Newlines In Description"] === 'true');
 CGMZ.Encyclopedia.HideUndiscovered = (CGMZ.Encyclopedia.parameters["Hide Undiscovered"] === 'true');
 CGMZ.Encyclopedia.CenterIcons = (CGMZ.Encyclopedia.parameters["Center Icons"] === 'true');
+CGMZ.Encyclopedia.CenterFace = (CGMZ.Encyclopedia.parameters["Center Face"] === 'true');
 CGMZ.Encyclopedia.AutoScroll = (CGMZ.Encyclopedia.parameters["Auto Scroll"] === "true");
 CGMZ.Encyclopedia.DisableTouchUISpace = (CGMZ.Encyclopedia.parameters["Disable Touch UI Space"] === 'true');
+CGMZ.Encyclopedia.DisableScrollSelect = (CGMZ.Encyclopedia.parameters["Disable Scroll Select"] === 'true');
 CGMZ.Encyclopedia.ListWindowRight = (CGMZ.Encyclopedia.parameters["List Window On Right"] === 'true');
 CGMZ.Encyclopedia.ShowDifficultyMods = (CGMZ.Encyclopedia.parameters["Show Difficulty Mods"] === 'true');
 CGMZ.Encyclopedia.IgnoreBlankEntries = (CGMZ.Encyclopedia.parameters["Ignore Blank Entries"] === 'true');
@@ -6641,6 +7113,7 @@ CGMZ.Encyclopedia.ShowSubcategoryAll = (CGMZ.Encyclopedia.parameters["Show Subca
 CGMZ.Encyclopedia.DisplayTPCosts = (CGMZ.Encyclopedia.parameters["Display TP Costs"] === 'true');
 CGMZ.Encyclopedia.SortByDiscoverDate = (CGMZ.Encyclopedia.parameters["Sort By Discover Date"] === 'true');
 CGMZ.Encyclopedia.ReverseDiscoverDateSort = (CGMZ.Encyclopedia.parameters["Reverse Discover Date Sort"] === 'true');
+CGMZ.Encyclopedia.ShowTotalWindow = (CGMZ.Encyclopedia.parameters["Show Total Window"] === 'true');
 CGMZ.Encyclopedia.UnknownEntry = CGMZ.Encyclopedia.parameters["Unknown Entry"];
 CGMZ.Encyclopedia.UnknownEntryDisplay = CGMZ.Encyclopedia.parameters["Unknown Entry Display"];
 CGMZ.Encyclopedia.UnknownEntryPurchaseDisplay = CGMZ.Encyclopedia.parameters["Unknown Entry Purchase Display"];
@@ -6656,13 +7129,10 @@ CGMZ.Encyclopedia.WeaponTypeText = CGMZ.Encyclopedia.parameters["Weapon Type Tex
 CGMZ.Encyclopedia.NoWeaponTypeText = CGMZ.Encyclopedia.parameters["No Weapon Type Text"];
 CGMZ.Encyclopedia.SkillTypeText = CGMZ.Encyclopedia.parameters["Skill Type Text"];
 CGMZ.Encyclopedia.NoSkillTypeText = CGMZ.Encyclopedia.parameters["No Skill Type Text"];
-CGMZ.Encyclopedia.DropsText = CGMZ.Encyclopedia.parameters["Drops Text"];
 CGMZ.Encyclopedia.DropChanceText = CGMZ.Encyclopedia.parameters["Drop Chance Text"];
-CGMZ.Encyclopedia.SketchText = CGMZ.Encyclopedia.parameters["Sketch Text"];
 CGMZ.Encyclopedia.NoteText = CGMZ.Encyclopedia.parameters["Note Text"];
 CGMZ.Encyclopedia.SuccessRateText = CGMZ.Encyclopedia.parameters["Success Rate Text"];
 CGMZ.Encyclopedia.ConsumableText = CGMZ.Encyclopedia.parameters["Consumable Text"];
-CGMZ.Encyclopedia.EffectsText = CGMZ.Encyclopedia.parameters["Effects Text"];
 CGMZ.Encyclopedia.HPEffectText = CGMZ.Encyclopedia.parameters["HP Effect Text"];
 CGMZ.Encyclopedia.MPEffectText = CGMZ.Encyclopedia.parameters["MP Effect Text"];
 CGMZ.Encyclopedia.TPEffectText = CGMZ.Encyclopedia.parameters["TP Effect Text"];
@@ -6734,6 +7204,7 @@ CGMZ.Encyclopedia.BestiaryStatsHeaderText = CGMZ.Encyclopedia.parameters["Bestia
 CGMZ.Encyclopedia.BestiaryNoteHeaderText = CGMZ.Encyclopedia.parameters["Bestiary Note Header Text"];
 CGMZ.Encyclopedia.BestiaryDropsHeaderText = CGMZ.Encyclopedia.parameters["Bestiary Drops Header Text"];
 CGMZ.Encyclopedia.BestiarySketchHeaderText = CGMZ.Encyclopedia.parameters["Bestiary Sketch Header Text"];
+CGMZ.Encyclopedia.BestiaryTraitHeaderText = CGMZ.Encyclopedia.parameters["Bestiary Traits Header Text"];
 CGMZ.Encyclopedia.NicknameText = CGMZ.Encyclopedia.parameters["Nickname Text"];
 CGMZ.Encyclopedia.ClassText = CGMZ.Encyclopedia.parameters["Class Text"];
 CGMZ.Encyclopedia.InitialLevelText = CGMZ.Encyclopedia.parameters["Initial Level Text"];
@@ -6745,69 +7216,77 @@ CGMZ.Encyclopedia.TotalWindowAlignment = CGMZ.Encyclopedia.parameters["Total Win
 CGMZ.Encyclopedia.ListWindowTextAlignment = CGMZ.Encyclopedia.parameters["List Window Alignment"];
 CGMZ.Encyclopedia.CategoryWindowTextAlignment = CGMZ.Encyclopedia.parameters["Category Window Alignment"];
 CGMZ.Encyclopedia.SubcategoryWindowTextAlignment = CGMZ.Encyclopedia.parameters["Subcategory Window Alignment"];
-CGMZ.Encyclopedia.ListWindowskin = CGMZ.Encyclopedia.parameters["List Windowskin"];
-CGMZ.Encyclopedia.DisplayWindowskin = CGMZ.Encyclopedia.parameters["Display Windowskin"];
-CGMZ.Encyclopedia.TotalWindowskin = CGMZ.Encyclopedia.parameters["Total Windowskin"];
-CGMZ.Encyclopedia.CategoryWindowskin = CGMZ.Encyclopedia.parameters["Category Windowskin"];
-CGMZ.Encyclopedia.SubcategoryWindowskin = CGMZ.Encyclopedia.parameters["Subcategory Windowskin"];
+CGMZ.Encyclopedia.ListWindowSettings = CGMZ.Encyclopedia.parameters["List Window Settings"];
+CGMZ.Encyclopedia.DisplayWindowSettings = CGMZ.Encyclopedia.parameters["Display Window Settings"];
+CGMZ.Encyclopedia.TotalWindowSettings = CGMZ.Encyclopedia.parameters["Total Window Settings"];
+CGMZ.Encyclopedia.CategoryWindowSettings = CGMZ.Encyclopedia.parameters["Category Window Settings"];
+CGMZ.Encyclopedia.SubcategoryWindowSettings = CGMZ.Encyclopedia.parameters["Subcategory Window Settings"];
+CGMZ.Encyclopedia.PurchaseWindowSettings = CGMZ.Encyclopedia.parameters["Purchase Window Settings"];
+CGMZ.Encyclopedia.ListWindowBackground = CGMZ.Encyclopedia.parameters["List Window Background"];
+CGMZ.Encyclopedia.DisplayWindowBackground = CGMZ.Encyclopedia.parameters["Display Window Background"];
+CGMZ.Encyclopedia.TotalWindowBackground = CGMZ.Encyclopedia.parameters["Total Window Background"];
+CGMZ.Encyclopedia.CategoryWindowBackground = CGMZ.Encyclopedia.parameters["Category Window Background"];
+CGMZ.Encyclopedia.SubcategoryWindowBackground = CGMZ.Encyclopedia.parameters["Subcategory Window Background"];
+CGMZ.Encyclopedia.PurchaseWindowBackground = CGMZ.Encyclopedia.parameters["Purchase Window Background"];
 CGMZ.Encyclopedia.IgnoreEntriesWithName = CGMZ.Encyclopedia.parameters["Ignore Entries With Name"];
 CGMZ.Encyclopedia.BestiarySkillsHeaderText = CGMZ.Encyclopedia.parameters["Bestiary Skills Header Text"];
 CGMZ.Encyclopedia.BestiarySkillNumberSeparator = CGMZ.Encyclopedia.parameters["Bestiary Skill Number Separator"];
 CGMZ.Encyclopedia.PurchaseConfirmText = CGMZ.Encyclopedia.parameters["Purchase Confirm Text"];
 CGMZ.Encyclopedia.PurchaseCancelText = CGMZ.Encyclopedia.parameters["Purchase Cancel Text"];
 CGMZ.Encyclopedia.PurchaseWindowText = CGMZ.Encyclopedia.parameters["Purchase Window Text"];
-CGMZ.Encyclopedia.PurchaseWindowskin = CGMZ.Encyclopedia.parameters["Purchase Windowskin"];
+CGMZ.Encyclopedia.KillCountText = CGMZ.Encyclopedia.parameters["Kill Count Text"];
+CGMZ.Encyclopedia.NewText = CGMZ.Encyclopedia.parameters["New Text"];
+CGMZ.Encyclopedia.DiscoverToast = CGMZ.Encyclopedia.parameters["Discover Toast"];
 CGMZ.Encyclopedia.DecimalSpots = Number(CGMZ.Encyclopedia.parameters["Total Window Rounding"]);
 CGMZ.Encyclopedia.ScrollWait = Number(CGMZ.Encyclopedia.parameters["Scroll Wait"]);
 CGMZ.Encyclopedia.ScrollSpeed = Number(CGMZ.Encyclopedia.parameters["Scroll Speed"]);
 CGMZ.Encyclopedia.CategoriesPerLine = Number(CGMZ.Encyclopedia.parameters["Categories Per Line"]);
 CGMZ.Encyclopedia.CategoryLines = Number(CGMZ.Encyclopedia.parameters["Category Lines"]);
 CGMZ.Encyclopedia.LabelColor = Number(CGMZ.Encyclopedia.parameters["Label Color"]);
-CGMZ.Encyclopedia.CategoryWindowPadding = Number(CGMZ.Encyclopedia.parameters["Category Window Padding"]);
-CGMZ.Encyclopedia.SubcategoryWindowPadding = Number(CGMZ.Encyclopedia.parameters["Subcategory Window Padding"]);
-CGMZ.Encyclopedia.ListWindowPadding = Number(CGMZ.Encyclopedia.parameters["List Window Padding"]);
-CGMZ.Encyclopedia.TotalWindowPadding = Number(CGMZ.Encyclopedia.parameters["Total Window Padding"]);
-CGMZ.Encyclopedia.DisplayWindowPadding = Number(CGMZ.Encyclopedia.parameters["Display Window Padding"]);
-CGMZ.Encyclopedia.PurchaseWindowPadding = Number(CGMZ.Encyclopedia.parameters["Purchase Window Padding"]);
 CGMZ.Encyclopedia.ListWindowWidth = Number(CGMZ.Encyclopedia.parameters["List Window Width"]);
 CGMZ.Encyclopedia.DateFormat = Number(CGMZ.Encyclopedia.parameters["Date Format"]);
 CGMZ.Encyclopedia.HeaderColor1 = Number(CGMZ.Encyclopedia.parameters["Header Color 1"]);
 CGMZ.Encyclopedia.HeaderColor2 = Number(CGMZ.Encyclopedia.parameters["Header Color 2"]);
 CGMZ.Encyclopedia.SubcategoryColumns = Number(CGMZ.Encyclopedia.parameters["Subcategory Columns"]);
+CGMZ.Encyclopedia.EncyclopediaItem = Number(CGMZ.Encyclopedia.parameters["Encyclopedia Item"]);
+CGMZ.Encyclopedia.ActorSpriteWidth = Number(CGMZ.Encyclopedia.parameters["Actor Sprite Width"]);
+CGMZ.Encyclopedia.ActorSpriteHeight = Number(CGMZ.Encyclopedia.parameters["Actor Sprite Height"]);
+CGMZ.Encyclopedia.ActorSvMotion = Number(CGMZ.Encyclopedia.parameters["Actor Sv Motion"]);
+CGMZ.Encyclopedia.CustomSpaceAmount = Number(CGMZ.Encyclopedia.parameters["Custom Spacing Amount"]);
 CGMZ.Encyclopedia.ScrollDeceleration = parseFloat(CGMZ.Encyclopedia.parameters["Scroll Deceleration"]);
 CGMZ.Encyclopedia.LargeIconMultiplier = parseFloat(CGMZ.Encyclopedia.parameters["Large Icon Multiplier"]);
-CGMZ.Encyclopedia.Categories = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Categories"], [], "CGMZ Encyclopedia", "Your Categories parameter is set up incorrectly.");
-CGMZ.Encyclopedia.Subcategories = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Subcategories"], [], "CGMZ Encyclopedia", "Your Subcategories parameter is set up incorrectly.");
-CGMZ.Encyclopedia.CustomEntries = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Custom Entries"], [], "CGMZ Encyclopedia", "Your Custom Entries parameter is set up incorrectly.");
-CGMZ.Encyclopedia.CustomDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Custom Display Info"], [], "CGMZ Encyclopedia", "Your Custom Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.ActorDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Actor Display Info"], [], "CGMZ Encyclopedia", "Your Actor Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.StateDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["State Display Info"], [], "CGMZ Encyclopedia", "Your State Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.SkillDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Skill Display Info"], [], "CGMZ Encyclopedia", "Your Skill Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.WeaponDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Weapon Display Info"], [], "CGMZ Encyclopedia", "Your Weapon Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.ArmorDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Armor Display Info"], [], "CGMZ Encyclopedia", "Your Armor Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.ItemDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Item Display Info"], [], "CGMZ Encyclopedia", "Your Item Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.BestiaryDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Bestiary Display Info"], [], "CGMZ Encyclopedia", "Your Bestiary Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.StatDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Stat Display Info"], [], "CGMZ Encyclopedia", "Your Stat Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.EffectDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Effect Display Info"], [], "CGMZ Encyclopedia", "Your Effect Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.TraitDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Trait Display Info"], [], "CGMZ Encyclopedia", "Your Trait Display Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.BestiaryListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Bestiary List Order"], [], "CGMZ Encyclopedia", "Your Bestiary List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
-CGMZ.Encyclopedia.ItemsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Items List Order"], [], "CGMZ Encyclopedia", "Your Items List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
-CGMZ.Encyclopedia.ArmorsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Armors List Order"], [], "CGMZ Encyclopedia", "Your Armors List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
-CGMZ.Encyclopedia.WeaponsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Weapons List Order"], [], "CGMZ Encyclopedia", "Your Weapons List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
-CGMZ.Encyclopedia.SkillsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Skills List Order"], [], "CGMZ Encyclopedia", "Your Skills List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
-CGMZ.Encyclopedia.StatesListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["States List Order"], [], "CGMZ Encyclopedia", "Your States List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
-CGMZ.Encyclopedia.ActorsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Actors List Order"], [], "CGMZ Encyclopedia", "Your Actor List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
-CGMZ.Encyclopedia.ExtraEnemyInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Bestiary Settings"], [], "CGMZ Encyclopedia", "Your Extra Enemy Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.ExtraItemInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Item Settings"], [], "CGMZ Encyclopedia", "Your Extra Item Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.ExtraWeaponInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Weapon Settings"], [], "CGMZ Encyclopedia", "Your Extra Weapon Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.ExtraArmorInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Armor Settings"], [], "CGMZ Encyclopedia", "Your Extra Armor Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.ExtraSkillInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Skill Settings"], [], "CGMZ Encyclopedia", "Your Extra Skill Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.ExtraStateInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra State Settings"], [], "CGMZ Encyclopedia", "Your Extra State Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.ExtraActorInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Actor Settings"], [], "CGMZ Encyclopedia", "Your Extra Actor Info parameter is set up incorrectly.");
-CGMZ.Encyclopedia.CategoryBackgrounds = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Category Backgrounds"], [], "CGMZ Encyclopedia", "Your Category Backgrounds parameter was not valid JSON, and could not be read.");
+CGMZ.Encyclopedia.Categories = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Categories"], [], "[CGMZ] Encyclopedia", "Your Categories parameter is set up incorrectly.");
+CGMZ.Encyclopedia.Subcategories = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Subcategories"], [], "[CGMZ] Encyclopedia", "Your Subcategories parameter is set up incorrectly.");
+CGMZ.Encyclopedia.CustomEntries = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Custom Entries"], [], "[CGMZ] Encyclopedia", "Your Custom Entries parameter is set up incorrectly.");
+CGMZ.Encyclopedia.CustomDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Custom Display Info"], [], "[CGMZ] Encyclopedia", "Your Custom Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.ActorDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Actor Display Info"], [], "[CGMZ] Encyclopedia", "Your Actor Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.StateDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["State Display Info"], [], "[CGMZ] Encyclopedia", "Your State Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.SkillDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Skill Display Info"], [], "[CGMZ] Encyclopedia", "Your Skill Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.WeaponDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Weapon Display Info"], [], "[CGMZ] Encyclopedia", "Your Weapon Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.ArmorDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Armor Display Info"], [], "[CGMZ] Encyclopedia", "Your Armor Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.ItemDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Item Display Info"], [], "[CGMZ] Encyclopedia", "Your Item Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.BestiaryDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Bestiary Display Info"], [], "[CGMZ] Encyclopedia", "Your Bestiary Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.StatDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Stat Display Info"], [], "[CGMZ] Encyclopedia", "Your Stat Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.EffectDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Effect Display Info"], [], "[CGMZ] Encyclopedia", "Your Effect Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.TraitDisplayInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Trait Display Info"], [], "[CGMZ] Encyclopedia", "Your Trait Display Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.BestiaryListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Bestiary List Order"], [], "[CGMZ] Encyclopedia", "Your Bestiary List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
+CGMZ.Encyclopedia.ItemsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Items List Order"], [], "[CGMZ] Encyclopedia", "Your Items List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
+CGMZ.Encyclopedia.ArmorsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Armors List Order"], [], "[CGMZ] Encyclopedia", "Your Armors List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
+CGMZ.Encyclopedia.WeaponsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Weapons List Order"], [], "[CGMZ] Encyclopedia", "Your Weapons List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
+CGMZ.Encyclopedia.SkillsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Skills List Order"], [], "[CGMZ] Encyclopedia", "Your Skills List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
+CGMZ.Encyclopedia.StatesListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["States List Order"], [], "[CGMZ] Encyclopedia", "Your States List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
+CGMZ.Encyclopedia.ActorsListOrder = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Actors List Order"], [], "[CGMZ] Encyclopedia", "Your Actor List Order parameter is set up incorrectly.").map(a => Number(a)).reverse();
+CGMZ.Encyclopedia.ExtraEnemyInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Bestiary Settings"], [], "[CGMZ] Encyclopedia", "Your Extra Enemy Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.ExtraItemInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Item Settings"], [], "[CGMZ] Encyclopedia", "Your Extra Item Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.ExtraWeaponInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Weapon Settings"], [], "[CGMZ] Encyclopedia", "Your Extra Weapon Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.ExtraArmorInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Armor Settings"], [], "[CGMZ] Encyclopedia", "Your Extra Armor Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.ExtraSkillInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Skill Settings"], [], "[CGMZ] Encyclopedia", "Your Extra Skill Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.ExtraStateInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra State Settings"], [], "[CGMZ] Encyclopedia", "Your Extra State Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.ExtraActorInfo = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Extra Actor Settings"], [], "[CGMZ] Encyclopedia", "Your Extra Actor Info parameter is set up incorrectly.");
+CGMZ.Encyclopedia.CategoryBackgrounds = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.parameters["Category Backgrounds"], [], "[CGMZ] Encyclopedia", "Your Category Backgrounds parameter was not valid JSON, and could not be read.");
 CGMZ.Encyclopedia.DefaultEnemyBGM = CGMZ.Encyclopedia.parameters["Default Enemy Battle BGM"];
 if(CGMZ.Encyclopedia.DefaultEnemyBGM) {
-	CGMZ.Encyclopedia.DefaultEnemyBGM = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.DefaultEnemyBGM, null, "CGMZ Encyclopedia", "Your Default Enemy Battle BGM parameter is set up incorrectly.");
+	CGMZ.Encyclopedia.DefaultEnemyBGM = CGMZ_Utils.parseJSON(CGMZ.Encyclopedia.DefaultEnemyBGM, null, "[CGMZ] Encyclopedia", "Your Default Enemy Battle BGM parameter is set up incorrectly.");
 	if(CGMZ.Encyclopedia.DefaultEnemyBGM) {
 		CGMZ.Encyclopedia.DefaultEnemyBGM.volume = Number(CGMZ.Encyclopedia.DefaultEnemyBGM.volume);
 		CGMZ.Encyclopedia.DefaultEnemyBGM.pan = Number(CGMZ.Encyclopedia.DefaultEnemyBGM.pan);
@@ -6830,6 +7309,7 @@ CGMZ_EncyclopediaData.prototype.initialize = function(id, index) {
 	this._id = id;
 	this._index = index;
 	this._discovered = false;
+	this._isUpdated = false;
 	this._discoverDate = null;
 	this._discoverTimestamp = 0;
 };
@@ -6846,6 +7326,13 @@ CGMZ_EncyclopediaData.prototype.discover = function() {
 	this._discovered = true;
 	this._discoverDate = CGMZ_Utils.createDateText(CGMZ.Encyclopedia.DateFormat);
 	this._discoverTimestamp = Date.now();
+	this._isUpdated = true;
+};
+//-----------------------------------------------------------------------------
+// When the object is viewed
+//-----------------------------------------------------------------------------
+CGMZ_EncyclopediaData.prototype.onView = function() {
+	this._isUpdated = false;
 };
 //=============================================================================
 // CGMZ_CustomEncyclopediaData
@@ -6862,14 +7349,15 @@ CGMZ_CustomEncyclopediaData.prototype.initialize = function(id, data) {
 	this._id = id+1;
 	this._index = id+1;
 	this._discovered = false;
+	this._isUpdated = false;
 	this._name = data.Name;
 	this._displayName = data["Display Name"];
-	this._sketch = CGMZ_Utils.parseJSON(data.Sketch, [], "CGMZ Encyclopedia", `Your custom entry with name ${this._name} had its Sketch parameter set up incorrectly and could not be read.`);
-	this._description = CGMZ_Utils.parseJSON(data.Description, "", "CGMZ Encyclopedia", `Your custom entry with name ${this._name} had its Description parameter set up incorrectly and could not be read.`);
+	this._sketch = CGMZ_Utils.parseJSON(data.Sketch, [], "[CGMZ] Encyclopedia", `Your custom entry with name ${this._name} had its Sketch parameter set up incorrectly and could not be read.`);
+	this._description = CGMZ_Utils.parseJSON(data.Description, "", "[CGMZ] Encyclopedia", `Your custom entry with name ${this._name} had its Description parameter set up incorrectly and could not be read.`);
 	this._cost = Number(data.Cost);
 	this._discoverDate = null;
-	this._customHeaders = CGMZ_Utils.parseJSON(data["Custom Headers"], [], "CGMZ Encyclopedia", "Your custom entry with name '" + this._name + "' had invalid JSON in the Custom Headers parameter and could not be read.");
-	this._customInfo = CGMZ_Utils.parseJSON(data["Custom Info"], [], "CGMZ Encyclopedia", "Your custom entry with name '" + this._name + "' had invalid JSON in the Custom Info parameter and could not be read.").map(info => CGMZ_Utils.parseJSON(info, null, "CGMZ Encyclopedia", "Your custom entry with name '" + this._name + "' had invalid JSON in the Custom Info parameter and could not be read."));
+	this._customHeaders = CGMZ_Utils.parseJSON(data["Custom Headers"], [], "[CGMZ] Encyclopedia", `Your custom entry with name '${this._name}' had invalid JSON in the Custom Headers parameter and could not be read.`);
+	this._customInfo = CGMZ_Utils.parseJSON(data["Custom Info"], [], "[CGMZ] Encyclopedia", `Your custom entry with name '${this._name}' had invalid JSON in the Custom Info parameter and could not be read.`).map(info => CGMZ_Utils.parseJSON(info, null, "[CGMZ] Encyclopedia", `Your custom entry with name '${this._name}' had invalid JSON in the Custom Info parameter and could not be read.`));
 	this._mainId = Number(data["Main Id"]);
 	this._mainType = data["Main Type"];
 	this._discoverTimestamp = 0;
@@ -6887,6 +7375,13 @@ CGMZ_CustomEncyclopediaData.prototype.discover = function() {
 	this._discovered = true;
 	this._discoverDate = CGMZ_Utils.createDateText(CGMZ.Encyclopedia.DateFormat);
 	this._discoverTimestamp = Date.now();
+	this._isUpdated = true;
+};
+//-----------------------------------------------------------------------------
+// When the object is viewed
+//-----------------------------------------------------------------------------
+CGMZ_CustomEncyclopediaData.prototype.onView = function() {
+	this._isUpdated = false;
 };
 //=============================================================================
 // CGMZ_Encyclopedia
@@ -7059,7 +7554,19 @@ CGMZ_Encyclopedia.prototype.processDiscovery = function(symbol, id) {
 		if(Imported.CGMZ_Achievements) {
 			$cgmz.checkAchievementEncyclopediaCriteria();
 		}
+		this.showDiscoverToast(symbol, id, dataObject);
 	}
+};
+//-----------------------------------------------------------------------------
+// Processing a (potential) new discovery
+//-----------------------------------------------------------------------------
+CGMZ_Encyclopedia.prototype.processNameDiscovery = function(symbol, name) {
+	const dataArray = this.getEncyclopediaData(symbol);
+	if(dataArray.length < 1) return;
+	const dataObject = this.getEncyclopediaObjectByName(dataArray, name);
+	if(!dataObject) return;
+	const id = dataObject._id;
+	this.processDiscovery(symbol, id);
 };
 //-----------------------------------------------------------------------------
 // Get Encyclopedia Object from Array
@@ -7067,6 +7574,43 @@ CGMZ_Encyclopedia.prototype.processDiscovery = function(symbol, id) {
 //-----------------------------------------------------------------------------
 CGMZ_Encyclopedia.prototype.getEncyclopediaObject = function(array, id) {
 	return array.find(obj => obj._id === id);
+};
+//-----------------------------------------------------------------------------
+// Get Encyclopedia Object from Array
+//-----------------------------------------------------------------------------
+CGMZ_Encyclopedia.prototype.getEncyclopediaObjectByName = function(array, name) {
+	return array.find(obj => obj._name === name);
+};
+//-----------------------------------------------------------------------------
+// Get Encyclopedia Object from Array
+// Possible that arrays are not in order of the ID, in this case it will find proper ID.
+//-----------------------------------------------------------------------------
+CGMZ_Encyclopedia.prototype.showDiscoverToast = function(symbol, id, dataObject) {
+	if(!Imported.CGMZ_ToastManager) return;
+	const toastObj = $cgmzTemp.getToastObjectFromPreset(CGMZ.Encyclopedia.DiscoverToast);
+	if(!toastObj) return;
+	let item = null;
+	switch(symbol) {
+		case 'actors':
+			const actor = $gameActors.actor(id);
+			toastObj.lineOne = toastObj.lineOne.replace('%name', actor.name());
+			toastObj.lineTwo = toastObj.lineTwo.replace('%name', actor.name());
+			break;
+	    case 'bestiary': item = CGMZ_Utils.lookupItem('enemy', id); break;
+		case 'items': item = CGMZ_Utils.lookupItem('item', id); break;
+		case 'weapons': item = CGMZ_Utils.lookupItem('weapon', id); break;
+		case 'armors': item = CGMZ_Utils.lookupItem('armor', id); break;
+		case 'skills': item = CGMZ_Utils.lookupItem('skill', id); break;
+		case 'states': item = CGMZ_Utils.lookupItem('state', id); break;
+		default:
+			toastObj.lineOne = toastObj.lineOne.replace('%name', dataObject._displayName || dataObject._name);
+			toastObj.lineTwo = toastObj.lineTwo.replace('%name', dataObject._displayName || dataObject._name);
+	}
+	if(item) {
+		toastObj.lineOne = toastObj.lineOne.replace('%name', item.name);
+		toastObj.lineTwo = toastObj.lineTwo.replace('%name', item.name);
+	}
+	$cgmzTemp.createNewToast(toastObj);
 };
 //-----------------------------------------------------------------------------
 // Get Encyclopedia Discovered
@@ -7125,7 +7669,7 @@ CGMZ_Encyclopedia.prototype.discoverTroop = function(troopId) {
 	if(!CGMZ.Encyclopedia.IncludeBestiary) return;
 	const troop = $dataTroops[troopId];
 	for(const member of troop.members) {
-		if ($dataEnemies[member.enemyId]) {
+		if($dataEnemies[member.enemyId]) {
 			this.processDiscovery('bestiary', member.enemyId);
 		}
 	}
@@ -7172,11 +7716,15 @@ CGMZ_Encyclopedia.prototype.discoverActor = function(id) {
 //-----------------------------------------------------------------------------
 // Change a custom entry description
 //-----------------------------------------------------------------------------
-CGMZ_Encyclopedia.prototype.changeCustomDescription = function(symbol, name, newDescription) {
+CGMZ_Encyclopedia.prototype.changeCustomDescription = function(symbol, name, newDescription, mode) {
 	if(!this._customData[symbol]) return;
 	const obj = this._customData[symbol].find(obj => obj._name === name)
 	if(!obj) return;
-	obj._description = newDescription;
+	if(mode === 'add') {
+		obj._description += newDescription;
+	} else {
+		obj._description = newDescription;
+	}
 };
 //-----------------------------------------------------------------------------
 // Change a custom entry sketch
@@ -7186,6 +7734,16 @@ CGMZ_Encyclopedia.prototype.changeCustomSketch = function(symbol, name, newSketc
 	const obj = this._customData[symbol].find(obj => obj._name === name)
 	if(!obj) return;
 	obj._sketch = newSketch;
+};
+//-----------------------------------------------------------------------------
+// Change a custom entry name
+//-----------------------------------------------------------------------------
+CGMZ_Encyclopedia.prototype.changeCustomName = function(symbol, name, newName) {
+	if(!this._customData[symbol]) return;
+	const obj = this._customData[symbol].find(obj => obj._name === name)
+	if(!obj) return;
+	obj._name = newName;
+	obj._displayName = newName;
 };
 //=============================================================================
 // CGMZ_Encyclopedia_Subcategory
@@ -7202,7 +7760,7 @@ CGMZ_Encyclopedia_Subcategory.prototype.initialize = function(subcategory) {
 	this.id = subcategory["Subcategory Id"];
 	this.mainId = subcategory["Main Category Id"];
 	this.name = subcategory["Subcategory Name"];
-	this.entryList = CGMZ_Utils.parseJSON(subcategory["Entry Ids"], [], "CGMZ Encyclopedia", "Your subcategory with id '" + this.id + "' had invalid JSON and could not be read.").map(x => Number(x));
+	this.entryList = CGMZ_Utils.parseJSON(subcategory["Entry Ids"], [], "[CGMZ] Encyclopedia", `Your subcategory with id '${this.id}' had invalid JSON and could not be read.`).map(x => Number(x));
 };
 //=============================================================================
 // CGMZ_Temp
@@ -7225,9 +7783,9 @@ CGMZ_Temp.prototype.createPluginData = function() {
 	this._encyclopediaSubcategoryMap = {};
 	this._encyclopediaSubcategories = {};
 	for(const json of CGMZ.Encyclopedia.ExtraEnemyInfo) {
-		const info = CGMZ_Utils.parseJSON(json, null, "CGMZ Encyclopedia", "Error encountered while parsing an Extra Enemy Info parameter: " + json);
+		const info = CGMZ_Utils.parseJSON(json, null, "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Enemy Info parameter: ${json}`);
 		if(!info) continue;
-		let bgm = CGMZ_Utils.parseJSON(info.BGM, null, "CGMZ Encyclopedia", "Error encountered while parsing an Extra Enemy Info BGM parameter: " + json);
+		let bgm = CGMZ_Utils.parseJSON(info.BGM, null, "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Enemy Info BGM parameter: ${json}`);
 		if(bgm?.name) {
 			bgm.volume = Number(bgm.volume);
 			bgm.pan = Number(bgm.pan);
@@ -7235,46 +7793,67 @@ CGMZ_Temp.prototype.createPluginData = function() {
 		} else {
 			bgm = null;
 		}
+		const customImages = this.setupEncyclopediaCustomImageArray(info["Custom Images"]);
 		const img = info.Image;
-		this._encyclopediaExtraEnemyData[Number(info.id)] = {bgm: bgm, img: img, price: Number(info.Price)};
+		const customInfo = CGMZ_Utils.parseJSON(info["Custom Info"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Enemy Info Custom Info parameter: ${json}`);
+		const customHeader = CGMZ_Utils.parseJSON(info["Custom Header"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Enemy Info Custom Header parameter: ${json}`);
+		this._encyclopediaExtraEnemyData[Number(info.id)] = {bgm: bgm, img: img, price: Number(info.Price), customInfo: customInfo, customHeader: customHeader, customImage: customImages};
 	}
 	for(const json of CGMZ.Encyclopedia.ExtraItemInfo) {
-		const info = CGMZ_Utils.parseJSON(json, null, "CGMZ Encyclopedia", "Error encountered while parsing an Extra Item Info parameter: " + json);
+		const info = CGMZ_Utils.parseJSON(json, null, "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Item Info parameter: ${json}`);
 		if(!info) continue;
+		const customImages = this.setupEncyclopediaCustomImageArray(info["Custom Images"]);
 		const img = {url: info["Icon Image"], width: Number(info["Image Width"]), height: Number(info["Image Height"])};
-		this._encyclopediaExtraItemData[Number(info.id)] = {img: img, price: Number(info.Price)};
+		const customInfo = CGMZ_Utils.parseJSON(info["Custom Info"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Item Info Custom Info parameter: ${json}`);
+		const customHeader = CGMZ_Utils.parseJSON(info["Custom Header"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Item Info Custom Header parameter: ${json}`);
+		this._encyclopediaExtraItemData[Number(info.id)] = {img: img, price: Number(info.Price), customInfo: customInfo, customHeader: customHeader, customImage: customImages};
 	}
 	for(const json of CGMZ.Encyclopedia.ExtraWeaponInfo) {
-		const info = CGMZ_Utils.parseJSON(json, null, "CGMZ Encyclopedia", "Error encountered while parsing an Extra Weapon Info parameter: " + json);
+		const info = CGMZ_Utils.parseJSON(json, null, "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Weapon Info parameter: ${json}`);
 		if(!info) continue;
+		const customImages = this.setupEncyclopediaCustomImageArray(info["Custom Images"]);
 		const img = {url: info["Icon Image"], width: Number(info["Image Width"]), height: Number(info["Image Height"])};
-		this._encyclopediaExtraWeaponData[Number(info.id)] = {img: img, price: Number(info.Price)};
+		const customInfo = CGMZ_Utils.parseJSON(info["Custom Info"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Weapon Info Custom Info parameter: ${json}`);
+		const customHeader = CGMZ_Utils.parseJSON(info["Custom Header"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Weapon Info Custom Header parameter: ${json}`);
+		this._encyclopediaExtraWeaponData[Number(info.id)] = {img: img, price: Number(info.Price), customInfo: customInfo, customHeader: customHeader, customImage: customImages};
 	}
 	for(const json of CGMZ.Encyclopedia.ExtraArmorInfo) {
-		const info = CGMZ_Utils.parseJSON(json, null, "CGMZ Encyclopedia", "Error encountered while parsing an Extra Armor Info parameter: " + json);
+		const info = CGMZ_Utils.parseJSON(json, null, "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Armor Info parameter: ${json}`);
 		if(!info) continue;
+		const customImages = this.setupEncyclopediaCustomImageArray(info["Custom Images"]);
 		const img = {url: info["Icon Image"], width: Number(info["Image Width"]), height: Number(info["Image Height"])};
-		this._encyclopediaExtraArmorData[Number(info.id)] = {img: img, price: Number(info.Price)};
+		const customInfo = CGMZ_Utils.parseJSON(info["Custom Info"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Armor Info Custom Info parameter: ${json}`);
+		const customHeader = CGMZ_Utils.parseJSON(info["Custom Header"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Armor Info Custom Header parameter: ${json}`);
+		this._encyclopediaExtraArmorData[Number(info.id)] = {img: img, price: Number(info.Price), customInfo: customInfo, customHeader: customHeader, customImage: customImages};
 	}
 	for(const json of CGMZ.Encyclopedia.ExtraSkillInfo) {
-		const info = CGMZ_Utils.parseJSON(json, null, "CGMZ Encyclopedia", "Error encountered while parsing an Extra Skill Info parameter: " + json);
+		const info = CGMZ_Utils.parseJSON(json, null, "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Skill Info parameter: ${json}`);
 		if(!info) continue;
+		const customImages = this.setupEncyclopediaCustomImageArray(info["Custom Images"]);
 		const img = {url: info["Icon Image"], width: Number(info["Image Width"]), height: Number(info["Image Height"])};
-		this._encyclopediaExtraSkillData[Number(info.id)] = {img: img, price: Number(info.Price)};
+		const customInfo = CGMZ_Utils.parseJSON(info["Custom Info"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Skill Info Custom Info parameter: ${json}`);
+		const customHeader = CGMZ_Utils.parseJSON(info["Custom Header"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Skill Info Custom Header parameter: ${json}`);
+		this._encyclopediaExtraSkillData[Number(info.id)] = {img: img, price: Number(info.Price), customInfo: customInfo, customHeader: customHeader, customImage: customImages};
 	}
 	for(const json of CGMZ.Encyclopedia.ExtraStateInfo) {
-		const info = CGMZ_Utils.parseJSON(json, null, "CGMZ Encyclopedia", "Error encountered while parsing an Extra State Info parameter: " + json);
+		const info = CGMZ_Utils.parseJSON(json, null, "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra State Info parameter: ${json}`);
 		if(!info) continue;
+		const customImages = this.setupEncyclopediaCustomImageArray(info["Custom Images"]);
 		const img = {url: info["Icon Image"], width: Number(info["Image Width"]), height: Number(info["Image Height"])};
-		this._encyclopediaExtraStateData[Number(info.id)] = {img: img, price: Number(info.Price)};
+		const customInfo = CGMZ_Utils.parseJSON(info["Custom Info"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra State Info Custom Info parameter: ${json}`);
+		const customHeader = CGMZ_Utils.parseJSON(info["Custom Header"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra State Info Custom Header parameter: ${json}`);
+		this._encyclopediaExtraStateData[Number(info.id)] = {img: img, price: Number(info.Price), customInfo: customInfo, customHeader: customHeader, customImage: customImages};
 	}
 	for(const json of CGMZ.Encyclopedia.ExtraActorInfo) {
-		const info = CGMZ_Utils.parseJSON(json, null, "CGMZ Encyclopedia", "Error encountered while parsing an Extra Actor Info parameter: " + json);
+		const info = CGMZ_Utils.parseJSON(json, null, "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Actor Info parameter: ${json}`);
 		if(!info) continue;
-		this._encyclopediaExtraActorData[Number(info.id)] = {price: Number(info.Price)};
+		const customImages = this.setupEncyclopediaCustomImageArray(info["Custom Images"]);
+		const customInfo = CGMZ_Utils.parseJSON(info["Custom Info"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Actor Info Custom Info parameter: ${json}`);
+		const customHeader = CGMZ_Utils.parseJSON(info["Custom Header"], [], "[CGMZ] Encyclopedia", `Error encountered while parsing an Extra Actor Info Custom Header parameter: ${json}`);
+		this._encyclopediaExtraActorData[Number(info.id)] = {price: Number(info.Price), customInfo: customInfo, customHeader: customHeader, customImage: customImages};
 	}
 	for(const subcategoryJSON of CGMZ.Encyclopedia.Subcategories) {
-		const parsed = CGMZ_Utils.parseJSON(subcategoryJSON, null, "CGMZ Encyclopedia", "One of your subcategories was set up incorrectly and could not be read.");
+		const parsed = CGMZ_Utils.parseJSON(subcategoryJSON, null, "[CGMZ] Encyclopedia", "One of your subcategories was set up incorrectly and could not be read.");
 		if(!parsed) continue;
 		if(!this._encyclopediaSubcategoryMap[parsed["Main Category Id"]]) {
 			this._encyclopediaSubcategoryMap[parsed["Main Category Id"]] = [parsed["Subcategory Id"]];
@@ -7284,6 +7863,25 @@ CGMZ_Temp.prototype.createPluginData = function() {
 		const subcategory = new CGMZ_Encyclopedia_Subcategory(parsed);
 		this._encyclopediaSubcategories[subcategory.id] = subcategory;
 	}
+};
+//-----------------------------------------------------------------------------
+// Set up custom image parameters
+//-----------------------------------------------------------------------------
+CGMZ_Temp.prototype.setupEncyclopediaCustomImageArray = function(jsonA, errorMsg) {
+	const parsedA = CGMZ_Utils.parseJSON(jsonA, [], "[CGMZ] Encyclopedia", `Your Custom Images parameter for your extra ${errorMsg} data was set up incorrectly and could not be read.`);
+	const customImages = [];
+	for(const json of parsedA) {
+		const obj = CGMZ_Utils.parseJSON(json, null, "[CGMZ] Encyclopedia", `A Custom Image parameter for your extra ${errorMsg} data was set up incorrectly and could not be read.`);
+		if(!obj) continue;
+		const customImg = {};
+		customImg.alignment = obj.Alignment;
+		customImg.file = obj.File;
+		customImg.block = (obj["Display Block"] === 'true');
+		customImg.width = Number(obj["Image Width"]);
+		customImg.height = Number(obj["Image Height"]);
+		customImages.push(customImg);
+	}
+	return customImages;
 };
 //-----------------------------------------------------------------------------
 // Get extra enemy settings
@@ -7355,6 +7953,7 @@ CGMZ_Temp.prototype.registerPluginCommands = function() {
 	PluginManager.registerCommand("CGMZ_Encyclopedia", "Get Completion", this.pluginCommandEncyclopediaGetCompletion);
 	PluginManager.registerCommand("CGMZ_Encyclopedia", "Change Description", this.pluginCommandEncyclopediaChangeDescription);
 	PluginManager.registerCommand("CGMZ_Encyclopedia", "Change Sketch", this.pluginCommandEncyclopediaChangeSketch);
+	PluginManager.registerCommand("CGMZ_Encyclopedia", "Change Name", this.pluginCommandEncyclopediaChangeName);
 	PluginManager.registerCommand("CGMZ_Encyclopedia", "Check Discovered", this.pluginCommandEncyclopediaCheckDiscovered);
 };
 //-----------------------------------------------------------------------------
@@ -7417,7 +8016,12 @@ CGMZ_Temp.prototype.pluginCommandEncyclopediaDiscoverActor = function(args) {
 // Plugin Command - Discover a custom entry
 //-----------------------------------------------------------------------------
 CGMZ_Temp.prototype.pluginCommandEncyclopediaDiscoverCustom = function(args) {
-	$cgmz.encyclopediaDiscovery(args.symbol, Number(args.id));
+	const id = Number(args.id);
+	if(id) {
+		$cgmz.encyclopediaDiscovery(args.symbol, id);
+	} else {
+		$cgmz.encyclopediaDiscovery(args.symbol, args.name);
+	}
 };
 //-----------------------------------------------------------------------------
 // Plugin Command - Discover multiple entries
@@ -7452,11 +8056,16 @@ CGMZ_Temp.prototype.pluginCommandEncyclopediaDiscoverCustomBatch = function(args
 	const entries = JSON.parse(args.entries);
 	for(const entryJSON of entries) {
 		const entry = JSON.parse(entryJSON);
-		$cgmz.encyclopediaDiscovery(entry.symbol, Number(entry.id));
+		const id = Number(entry.id);
+		if(id) {
+			$cgmz.encyclopediaDiscovery(entry.symbol, id);
+		} else {
+			$cgmz.encyclopediaDiscovery(entry.symbol, entry.name);
+		}
 	}
 };
 //-----------------------------------------------------------------------------
-// Plugin Command - Discover an actor
+// Plugin Command - Discover a range of entries
 //-----------------------------------------------------------------------------
 CGMZ_Temp.prototype.pluginCommandEncyclopediaDiscoverRange = function(args) {
 	const start = Number(args.Start);
@@ -7483,13 +8092,19 @@ CGMZ_Temp.prototype.pluginCommandEncyclopediaGetCompletion = function(args) {
 // Plugin Command - Change Custom Entry Description
 //-----------------------------------------------------------------------------
 CGMZ_Temp.prototype.pluginCommandEncyclopediaChangeDescription = function(args) {
-	$cgmz._encyclopedia.changeCustomDescription(args.Symbol, args.Name, JSON.parse(args.Description));
+	$cgmz._encyclopedia.changeCustomDescription(args.Symbol, args.Name, JSON.parse(args.Description), args.Mode);
 };
 //-----------------------------------------------------------------------------
 // Plugin Command - Change Custom Entry Sketch
 //-----------------------------------------------------------------------------
 CGMZ_Temp.prototype.pluginCommandEncyclopediaChangeSketch = function(args) {
 	$cgmz._encyclopedia.changeCustomSketch(args.Symbol, args.Name, JSON.parse(args.Sketch));
+};
+//-----------------------------------------------------------------------------
+// Plugin Command - Change Custom Entry Sketch
+//-----------------------------------------------------------------------------
+CGMZ_Temp.prototype.pluginCommandEncyclopediaChangeName = function(args) {
+	$cgmz._encyclopedia.changeCustomName(args.Symbol, args.Name, args["New Name"]);
 };
 //-----------------------------------------------------------------------------
 // Plugin Command - Check if an entry is discovered
@@ -7503,7 +8118,7 @@ CGMZ_Temp.prototype.pluginCommandEncyclopediaCheckDiscovered = function(args) {
 // Manage encyclopedia data
 //=============================================================================
 //-----------------------------------------------------------------------------
-// Alias. Also initialize encyclopedia data
+// Also initialize encyclopedia data
 //-----------------------------------------------------------------------------
 const alias_CGMZ_Encyclopedia_createPluginData = CGMZ_Core.prototype.createPluginData;
 CGMZ_Core.prototype.createPluginData = function() {
@@ -7555,7 +8170,11 @@ CGMZ_Core.prototype.patchOldEncyclopediaVersions = function() {
 // Discover encyclopedia entry manually
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.encyclopediaDiscovery = function(symbol, id) {
-	this._encyclopedia.processDiscovery(symbol, id);
+	if(typeof id === 'number') {
+		this._encyclopedia.processDiscovery(symbol, id);
+	} else {
+		this._encyclopedia.processNameDiscovery(symbol, id);
+	}
 };
 //-----------------------------------------------------------------------------
 // Get Encyclopedia Discovered
@@ -7624,73 +8243,65 @@ CGMZ_Core.prototype.EncyclopediaDiscoverActor = function(actorId) {
 	this._encyclopedia.discoverActor(actorId);
 };
 //-----------------------------------------------------------------------------
-// Get total discovered %
+// Get total discovered %. deprecated.
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.getEncyclopediaTotalPercent = function() {
-	let percentage = this._encyclopedia.getAmountDiscovered('total') / this._encyclopedia.getAmountEntries('total');
-	percentage *= 100;
-	return parseFloat(percentage.toFixed(CGMZ.Encyclopedia.DecimalSpots));
+	return this.getEncyclopediaPercent('total');
 };
 //-----------------------------------------------------------------------------
-// Get bestiary discovered %
+// Get bestiary discovered %. deprecated.
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.getEncyclopediaBestiaryPercent = function() {
-	let percentage = this._encyclopedia.getAmountDiscovered('bestiary') / this._encyclopedia.getAmountEntries('bestiary');
-	percentage *= 100;
-	return parseFloat(percentage.toFixed(CGMZ.Encyclopedia.DecimalSpots));
+	return this.getEncyclopediaPercent('bestiary');
 };
 //-----------------------------------------------------------------------------
-// Get items discovered %
+// Get items discovered %. deprecated.
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.getEncyclopediaItemsPercent = function() {
-	let percentage = this._encyclopedia.getAmountDiscovered('items') / this._encyclopedia.getAmountEntries('items');
-	percentage *= 100;
-	return parseFloat(percentage.toFixed(CGMZ.Encyclopedia.DecimalSpots));
+	return this.getEncyclopediaPercent('items');
 };
 //-----------------------------------------------------------------------------
-// Get weapons discovered %
+// Get weapons discovered %. deprecated.
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.getEncyclopediaWeaponsPercent = function() {
-	let percentage = this._encyclopedia.getAmountDiscovered('weapons') / this._encyclopedia.getAmountEntries('weapons');
-	percentage *= 100;
-	return parseFloat(percentage.toFixed(CGMZ.Encyclopedia.DecimalSpots));
+	return this.getEncyclopediaPercent('weapons');
 };
 //-----------------------------------------------------------------------------
-// Get armors discovered %
+// Get armors discovered %. deprecated.
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.getEncyclopediaArmorsPercent = function() {
-	let percentage = this._encyclopedia.getAmountDiscovered('armors') / this._encyclopedia.getAmountEntries('armors');
-	percentage *= 100;
-	return parseFloat(percentage.toFixed(CGMZ.Encyclopedia.DecimalSpots));
+	return this.getEncyclopediaPercent('armors');
 };
 //-----------------------------------------------------------------------------
-// Get skills discovered %
+// Get skills discovered %. deprecated.
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.getEncyclopediaSkillsPercent = function() {
-	let percentage = this._encyclopedia.getAmountDiscovered('skills') / this._encyclopedia.getAmountEntries('skills');
-	percentage *= 100;
-	return parseFloat(percentage.toFixed(CGMZ.Encyclopedia.DecimalSpots));
+	return this.getEncyclopediaPercent('skills');
 };
 //-----------------------------------------------------------------------------
-// Get states discovered %
+// Get states discovered %. deprecated.
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.getEncyclopediaStatesPercent = function() {
-	let percentage = this._encyclopedia.getAmountDiscovered('states') / this._encyclopedia.getAmountEntries('states');
-	percentage *= 100;
-	return parseFloat(percentage.toFixed(CGMZ.Encyclopedia.DecimalSpots));
+	return this.getEncyclopediaPercent('states');
 };
 //-----------------------------------------------------------------------------
-// Get actors discovered %
+// Get actors discovered %. deprecated.
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.getEncyclopediaActorsPercent = function() {
-	let percentage = this._encyclopedia.getAmountDiscovered('actors') / this._encyclopedia.getAmountEntries('actors');
-	percentage *= 100;
-	return parseFloat(percentage.toFixed(CGMZ.Encyclopedia.DecimalSpots));
+	return this.getEncyclopediaPercent('actors');
 };
 //-----------------------------------------------------------------------------
-// Get custom discovered %
+// Get custom discovered %. deprecated.
 //-----------------------------------------------------------------------------
 CGMZ_Core.prototype.getEncyclopediaCustomPercent = function(symbol) {
+	return this.getEncyclopediaPercent(symbol);
+};
+//-----------------------------------------------------------------------------
+// Get encyclopedia percent by symbol.
+// Default symbols: 'total', 'bestiary', items', 'weapons', 'armors', 'skills',
+// 'states', 'actors'. For custom, use the custom symbol.
+//-----------------------------------------------------------------------------
+CGMZ_Core.prototype.getEncyclopediaPercent = function(symbol) {
 	let percentage = this._encyclopedia.getAmountDiscovered(symbol) / this._encyclopedia.getAmountEntries(symbol);
 	percentage *= 100;
 	return parseFloat(percentage.toFixed(CGMZ.Encyclopedia.DecimalSpots));
@@ -7713,9 +8324,6 @@ CGMZ_Scene_Encyclopedia.prototype.initialize = function() {
 	this.setupCategoryBackgrounds();
 	this._savedBGM = null;
 	this._savedBGS = null;
-	this._backgroundCustomSprite = new Sprite();
-	this._backgroundCustomSprite.hide();
-	this.addChild(this._backgroundCustomSprite);
 	this._symbol = null;
 };
 //-----------------------------------------------------------------------------
@@ -7724,9 +8332,9 @@ CGMZ_Scene_Encyclopedia.prototype.initialize = function() {
 CGMZ_Scene_Encyclopedia.prototype.setupCategoryBackgrounds = function() {
 	this._categoryBackgroundMap = {};
 	for(const backgroundJSON of CGMZ.Encyclopedia.CategoryBackgrounds) {
-		const backgroundData = CGMZ_Utils.parseJSON(backgroundJSON, null, "CGMZ Encyclopedia", "One of your Category Backgrounds had invalid JSON, and could not be read. Skipping...");
+		const backgroundData = CGMZ_Utils.parseJSON(backgroundJSON, null, "[CGMZ] Encyclopedia", "One of your Category Backgrounds had invalid JSON, and could not be read. Skipping...");
 		if(!backgroundData) continue;
-		this._categoryBackgroundMap[backgroundData.symbol] = backgroundData.image;
+		this._categoryBackgroundMap[backgroundData.symbol] = backgroundData.Preset
 	}
 };
 //-----------------------------------------------------------------------------
@@ -7795,6 +8403,7 @@ CGMZ_Scene_Encyclopedia.prototype.subcategoryWindowRect = function() {
 CGMZ_Scene_Encyclopedia.prototype.createTotalsWindow = function() {
 	this._totalsWindow = new CGMZ_Window_EncyclopediaTotals(this.totalsWindowRect());
 	this._categoryWindow.setTotalWindow(this._totalsWindow);
+	if(!CGMZ.Encyclopedia.ShowTotalWindow) this._totalsWindow.hide();
 	this.addWindow(this._totalsWindow);
 };
 //-----------------------------------------------------------------------------
@@ -7822,7 +8431,7 @@ CGMZ_Scene_Encyclopedia.prototype.createListWindow = function() {
 //-----------------------------------------------------------------------------
 CGMZ_Scene_Encyclopedia.prototype.listWindowRect = function() {
 	const width = this._totalsWindow.width;
-	const height = Graphics.boxHeight - (this._categoryWindow.y + this._categoryWindow.height) - this._totalsWindow.height;
+	const height = Graphics.boxHeight - (this._categoryWindow.y + this._categoryWindow.height) - (this._totalsWindow.height * CGMZ.Encyclopedia.ShowTotalWindow);
 	const y = this._categoryWindow.y + this._categoryWindow.height;
 	const x = this._totalsWindow.x;
 	return new Rectangle(x, y, width, height);
@@ -7929,6 +8538,12 @@ CGMZ_Scene_Encyclopedia.prototype.onSubcategoryCancel = function() {
 // On list cancel
 //-----------------------------------------------------------------------------
 CGMZ_Scene_Encyclopedia.prototype.onListCancel = function() {
+	if(this._listWindow.canPlayBGM() && CGMZ.Encyclopedia.DisableScrollSelect) {
+		(this._savedBGM) ? AudioManager.replayBgm(this._savedBGM) : AudioManager.stopBgm();
+		if(this._savedBGS) AudioManager.replayBgs(this._savedBGS);
+		this._savedBGM = null;
+		this._savedBGS = null;
+	}
 	this._dummyWindow.show();
 	this._displayWindow.hide();
 	this._displayWindow.setItem("clear", null);
@@ -7975,8 +8590,12 @@ CGMZ_Scene_Encyclopedia.prototype.onListOkNormalMode = function() {
 		this._savedBGS = AudioManager.saveBgs();
 		AudioManager.playBgm(this._listWindow.getBGMToPlay());
 	}
-	this._displayWindow.activate();
-	this._listWindow.deactivate();
+	if(!CGMZ.Encyclopedia.DisableScrollSelect) {
+		this._displayWindow.activate();
+		this._listWindow.deactivate();
+	} else {
+		this._listWindow.activate();
+	}
 };
 //-----------------------------------------------------------------------------
 // On Purchase Ok
@@ -8028,31 +8647,16 @@ CGMZ_Scene_Encyclopedia.prototype.update = function() {
 // Update the background image
 //-----------------------------------------------------------------------------
 CGMZ_Scene_Encyclopedia.prototype.updateBackgroundImage = function() {
-	if(!this._categoryWindow) return;
+	if(!Imported.CGMZ_SceneBackgrounds || !this._categoryWindow) return;
 	const data = this._categoryWindow.currentData();
 	if(!data) return;
 	const symbol = data.symbol;
 	if(!symbol) return;
 	if(symbol !== this._symbol) {
 		this._symbol = symbol;
-		const imageData = this.getBackgroundImageData(symbol);
-		if(imageData) {
-			this._backgroundCustomSprite.bitmap = ImageManager.loadBitmap(imageData.folder, imageData.filename);
-			this._backgroundSprite.hide();
-			this._backgroundCustomSprite.show();
-		} else {
-			this._backgroundCustomSprite.hide();
-			this._backgroundSprite.show();
-		}
+		const preset = this._categoryBackgroundMap[symbol];
+		this.CGMZ_changeSceneBackground(preset || "default");
 	}
-};
-//-----------------------------------------------------------------------------
-// Get the background image for the given symbol
-//-----------------------------------------------------------------------------
-CGMZ_Scene_Encyclopedia.prototype.getBackgroundImageData = function(symbol) {
-	const imagePath = this._categoryBackgroundMap[symbol];
-	if(!imagePath) return null;
-	return CGMZ_Utils.getImageData(imagePath, "img/");
 };
 //=============================================================================
 // CGMZ_Window_EncyclopediaCategory
@@ -8069,24 +8673,8 @@ CGMZ_Window_EncyclopediaCategory.prototype.constructor = CGMZ_Window_Encyclopedi
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaCategory.prototype.initialize = function(rect) {
 	Window_HorzCommand.prototype.initialize.call(this, rect);
-	this.setBackgroundType(2 * (CGMZ.Encyclopedia.TransparentWindows));
-};
-//-----------------------------------------------------------------------------
-// Set the window padding
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaCategory.prototype.updatePadding = function() {
-	this.padding = CGMZ.Encyclopedia.CategoryWindowPadding;
-};
-//-----------------------------------------------------------------------------
-// Load Proper Windowskin
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaCategory.prototype.loadWindowskin = function() {
-	if(CGMZ.Encyclopedia.CategoryWindowskin) {
-		const windowskin = CGMZ_Utils.getImageData(CGMZ.Encyclopedia.CategoryWindowskin, "img");
-		this.windowskin = ImageManager.loadBitmap(windowskin.folder, windowskin.filename);
-	} else {
-		Window_HorzCommand.prototype.loadWindowskin.call(this);
-	}
+	if(Imported.CGMZ_WindowBackgrounds && CGMZ.Encyclopedia.CategoryWindowBackground) this.CGMZ_setWindowBackground(CGMZ.Encyclopedia.CategoryWindowBackground);
+	if(Imported.CGMZ_WindowSettings && CGMZ.Encyclopedia.CategoryWindowSettings) this.CGMZ_setWindowSettings(CGMZ.Encyclopedia.CategoryWindowSettings);
 };
 //-----------------------------------------------------------------------------
 // Max columns to display
@@ -8099,7 +8687,7 @@ CGMZ_Window_EncyclopediaCategory.prototype.maxCols = function() {
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaCategory.prototype.makeCommandList = function() {
 	for(const category of CGMZ.Encyclopedia.Categories) {
-		const categoryData = CGMZ_Utils.parseJSON(category, null, "CGMZ Encyclopedia", "One of your categories had invalid JSON and could not be parse: " + category);
+		const categoryData = CGMZ_Utils.parseJSON(category, null, "[CGMZ] Encyclopedia", "One of your categories had invalid JSON and could not be parse: " + category);
 		if(categoryData && this.canShowCommand(categoryData)) {
 			const name = categoryData["Command Text"];
 			const symbol = categoryData["Category Symbol"];
@@ -8121,32 +8709,24 @@ CGMZ_Window_EncyclopediaCategory.prototype.canShowCommand = function(categoryDat
 		case 'states': if(!CGMZ.Encyclopedia.IncludeStates) return false; break;
 		case 'actors': if(!CGMZ.Encyclopedia.IncludeActors) return false;
 	}
-	const showReqs = CGMZ_Utils.parseJSON(categoryData["Category Display Requirements"], null, "CGMZ Encyclopedia", "Your category with symbol " + categoryData["Category Symbol"] + " had invalid Display Requirements.");
+	const showReqs = CGMZ_Utils.parseJSON(categoryData["Category Display Requirements"], null, "[CGMZ] Encyclopedia", "Your category with symbol " + categoryData["Category Symbol"] + " had invalid Display Requirements.");
 	if(!showReqs) return true;
 	const itemID = Number(showReqs["Item"]);
 	const switchID = Number(showReqs["Switch"]);
-	if(itemID > 0 && !$gameParty.hasItem($dataItems[itemID])) {
-		return false;
-	}
-	if(switchID > 0 && !$gameSwitches.value(switchID)) {
-		return false;
-	}
+	if(itemID > 0 && !$gameParty.hasItem($dataItems[itemID])) return false;
+	if(switchID > 0 && !$gameSwitches.value(switchID)) return false;
 	return true;
 };
 //-----------------------------------------------------------------------------
 // Command Enabled?
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaCategory.prototype.enableEncyclopediaCommand = function(categoryData) {
-	const enableReqs = CGMZ_Utils.parseJSON(categoryData["Category Enable Requirements"], null, "CGMZ Encyclopedia", "Your category with symbol " + categoryData["Category Symbol"] + " had invalid Display Requirements.");
+	const enableReqs = CGMZ_Utils.parseJSON(categoryData["Category Enable Requirements"], null, "[CGMZ] Encyclopedia", "Your category with symbol " + categoryData["Category Symbol"] + " had invalid Display Requirements.");
 	if(!enableReqs) return true;
 	const itemID = Number(enableReqs["Item"]);
 	const switchID = Number(enableReqs["Switch"]);
-	if(itemID && !$gameParty.hasItem($dataItems[itemID])) {
-		return false;
-	}
-	if(switchID && !$gameSwitches.value(switchID)) {
-		return false;
-	}
+	if(itemID && !$gameParty.hasItem($dataItems[itemID])) return false;
+	if(switchID && !$gameSwitches.value(switchID)) return false;
 	return true;
 };
 //-----------------------------------------------------------------------------
@@ -8222,28 +8802,12 @@ CGMZ_Window_EncyclopediaSubcategory.prototype.constructor = CGMZ_Window_Encyclop
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaSubcategory.prototype.initialize = function(rect) {
 	Window_HorzCommand.prototype.initialize.call(this, rect);
+	if(Imported.CGMZ_WindowBackgrounds && CGMZ.Encyclopedia.SubcategoryWindowBackground) this.CGMZ_setWindowBackground(CGMZ.Encyclopedia.SubcategoryWindowBackground);
+	if(Imported.CGMZ_WindowSettings && CGMZ.Encyclopedia.SubcategoryWindowSettings) this.CGMZ_setWindowSettings(CGMZ.Encyclopedia.SubcategoryWindowSettings);
 	this.deselect();
 	this.deactivate();
 	this.hide();
 	this._categoryId = null;
-	this.setBackgroundType(2 * (CGMZ.Encyclopedia.TransparentWindows));
-};
-//-----------------------------------------------------------------------------
-// Set the window padding
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaSubcategory.prototype.updatePadding = function() {
-	this.padding = CGMZ.Encyclopedia.SubcategoryWindowPadding;
-};
-//-----------------------------------------------------------------------------
-// Load Proper Windowskin
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaSubcategory.prototype.loadWindowskin = function() {
-	if(CGMZ.Encyclopedia.SubcategoryWindowskin) {
-		const windowskin = CGMZ_Utils.getImageData(CGMZ.Encyclopedia.SubcategoryWindowskin, "img");
-		this.windowskin = ImageManager.loadBitmap(windowskin.folder, windowskin.filename);
-	} else {
-		Window_HorzCommand.prototype.loadWindowskin.call(this);
-	}
 };
 //-----------------------------------------------------------------------------
 // Get the current subcategory
@@ -8309,18 +8873,8 @@ CGMZ_Window_EncDummy.prototype.constructor = CGMZ_Window_EncDummy;
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncDummy.prototype.initialize = function(rect) {
 	Window_Base.prototype.initialize.call(this, rect);
-	this.setBackgroundType(2 * (CGMZ.Encyclopedia.TransparentWindows));
-};
-//-----------------------------------------------------------------------------
-// Load Proper Windowskin
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncDummy.prototype.loadWindowskin = function() {
-	if(CGMZ.Encyclopedia.DisplayWindowskin) {
-		const windowskin = CGMZ_Utils.getImageData(CGMZ.Encyclopedia.DisplayWindowskin, "img");
-		this.windowskin = ImageManager.loadBitmap(windowskin.folder, windowskin.filename);
-	} else {
-		CGMZ_Window_Scrollable.prototype.loadWindowskin.call(this);
-	}
+	if(Imported.CGMZ_WindowBackgrounds && CGMZ.Encyclopedia.DisplayWindowBackground) this.CGMZ_setWindowBackground(CGMZ.Encyclopedia.DisplayWindowBackground);
+	if(Imported.CGMZ_WindowSettings && CGMZ.Encyclopedia.DisplayWindowSettings) this.CGMZ_setWindowSettings(CGMZ.Encyclopedia.DisplayWindowSettings);
 };
 //=============================================================================
 // CGMZ_Window_EncyclopediaTotals
@@ -8337,26 +8891,10 @@ CGMZ_Window_EncyclopediaTotals.prototype.constructor = CGMZ_Window_EncyclopediaT
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaTotals.prototype.initialize = function(rect) {
 	Window_Base.prototype.initialize.call(this, rect);
-	this.setBackgroundType(2 * (CGMZ.Encyclopedia.TransparentWindows));
+	if(Imported.CGMZ_WindowBackgrounds && CGMZ.Encyclopedia.TotalWindowBackground) this.CGMZ_setWindowBackground(CGMZ.Encyclopedia.TotalWindowBackground);
+	if(Imported.CGMZ_WindowSettings && CGMZ.Encyclopedia.TotalWindowSettings) this.CGMZ_setWindowSettings(CGMZ.Encyclopedia.TotalWindowSettings);
 	this._symbol = null;
 	this._name = null;
-};
-//-----------------------------------------------------------------------------
-// Set the window padding
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaTotals.prototype.updatePadding = function() {
-	this.padding = CGMZ.Encyclopedia.TotalWindowPadding;
-};
-//-----------------------------------------------------------------------------
-// Load Proper Windowskin
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaTotals.prototype.loadWindowskin = function() {
-	if(CGMZ.Encyclopedia.TotalWindowskin) {
-		const windowskin = CGMZ_Utils.getImageData(CGMZ.Encyclopedia.TotalWindowskin, "img");
-		this.windowskin = ImageManager.loadBitmap(windowskin.folder, windowskin.filename);
-	} else {
-		Window_Base.prototype.loadWindowskin.call(this);
-	}
 };
 //-----------------------------------------------------------------------------
 // Set Item
@@ -8382,7 +8920,7 @@ CGMZ_Window_EncyclopediaTotals.prototype.drawTotalCompletion = function() {
 	const totalDiscovered = $cgmz.getEncyclopediaDiscovered('total');
 	const totalEntries = $cgmz.getEncyclopediaEntries('total');
 	const completion = Number((totalDiscovered/totalEntries)*100).toFixed(CGMZ.Encyclopedia.DecimalSpots);
-	const string = "\\c[" + CGMZ.Encyclopedia.LabelColor + "]" + CGMZ.Encyclopedia.TotalText + "\\c[0]" + completion + "%";
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.TotalText}\\c[0]${completion}%`;
 	this.CGMZ_drawTextLine(string, 0, this.lineHeight(), this.contents.width, CGMZ.Encyclopedia.TotalWindowAlignment);
 };
 //-----------------------------------------------------------------------------
@@ -8392,7 +8930,7 @@ CGMZ_Window_EncyclopediaTotals.prototype.drawSpecificCompletion = function(symbo
 	const discovered = $cgmz.getEncyclopediaDiscovered(symbol);
 	const entries = $cgmz.getEncyclopediaEntries(symbol);
 	const completion = Number((discovered/entries)*100).toFixed(CGMZ.Encyclopedia.DecimalSpots);
-	const string = "\\c[" + CGMZ.Encyclopedia.LabelColor + "]" + name + ": \\c[0]" + completion + "%";
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${name}: \\c[0]${completion}%`;
 	this.CGMZ_drawTextLine(string, 0, 0, this.contents.width, CGMZ.Encyclopedia.TotalWindowAlignment);
 };
 //=============================================================================
@@ -8410,26 +8948,10 @@ CGMZ_Window_EncyclopediaList.prototype.constructor = CGMZ_Window_EncyclopediaLis
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaList.prototype.initialize = function(rect) {
 	Window_Selectable.prototype.initialize.call(this, rect);
-	this.setBackgroundType(2 * (CGMZ.Encyclopedia.TransparentWindows));
+	if(Imported.CGMZ_WindowBackgrounds && CGMZ.Encyclopedia.ListWindowBackground) this.CGMZ_setWindowBackground(CGMZ.Encyclopedia.ListWindowBackground);
+	if(Imported.CGMZ_WindowSettings && CGMZ.Encyclopedia.ListWindowSettings) this.CGMZ_setWindowSettings(CGMZ.Encyclopedia.ListWindowSettings);
 	this._symbol = null;
 	this._subcategory = null;
-};
-//-----------------------------------------------------------------------------
-// Set the window padding
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaList.prototype.updatePadding = function() {
-	this.padding = CGMZ.Encyclopedia.ListWindowPadding;
-};
-//-----------------------------------------------------------------------------
-// Load Proper Windowskin
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaList.prototype.loadWindowskin = function() {
-	if(CGMZ.Encyclopedia.ListWindowskin) {
-		const windowskin = CGMZ_Utils.getImageData(CGMZ.Encyclopedia.ListWindowskin, "img");
-		this.windowskin = ImageManager.loadBitmap(windowskin.folder, windowskin.filename);
-	} else {
-		Window_Selectable.prototype.loadWindowskin.call(this);
-	}
 };
 //-----------------------------------------------------------------------------
 // Check if conditions are met for playing battle BGMs for bestiary
@@ -8549,10 +9071,23 @@ CGMZ_Window_EncyclopediaList.prototype.drawItem = function(index) {
 	const number = CGMZ.Encyclopedia.NumberEntries ? (index+1) + ". " : "";
 	const name = item._discovered ? this.getItemName(this._symbol, item._id) : CGMZ.Encyclopedia.UnknownEntry;
 	this.changePaintOpacity(this.isEnabled(item));
-	if(CGMZ.Encyclopedia.ListWindowEnableTextCodes) {
-		this.CGMZ_drawTextLine(number + name, rect.x, rect.y, rect.width, CGMZ.Encyclopedia.ListWindowTextAlignment);
+	if(item._isUpdated && CGMZ.Encyclopedia.NewText) {
+		const newWidth = this.CGMZ_textSizeEx(CGMZ.Encyclopedia.NewText).width + 4;
+		this.CGMZ_drawTextLine(number + name, rect.x, rect.y, rect.width - newWidth, CGMZ.Encyclopedia.ListWindowTextAlignment);
+		this.CGMZ_drawTextLine(CGMZ.Encyclopedia.NewText, rect.x, rect.y, rect.width, 'right');
 	} else {
-		this.drawText(number + name, rect.x, rect.y, rect.width, CGMZ.Encyclopedia.ListWindowTextAlignment);
+		this.CGMZ_drawTextLine(number + name, rect.x, rect.y, rect.width, CGMZ.Encyclopedia.ListWindowTextAlignment);
+	}
+};
+//-----------------------------------------------------------------------------
+// Set item to not be updated after selected
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaList.prototype.select = function(index) {
+	Window_Selectable.prototype.select.call(this, index);
+    const item = this._data?.[index];
+	if(item) {
+		item.onView();
+		this.redrawItem(index);
 	}
 };
 //-----------------------------------------------------------------------------
@@ -8572,7 +9107,7 @@ CGMZ_Window_EncyclopediaList.prototype.getItemName = function(symbol, id) {
 		case 'weapons': return $dataWeapons[id]?.name;
 		case 'skills': return $dataSkills[id]?.name;
 		case 'states': return $dataStates[id]?.name;
-		case 'actors': return $dataActors[id]?.name;
+		case 'actors': return $gameActors.actor(id).name();
 		default: const obj = $cgmz.getEncyclopediaObject(symbol, id);
 				 return (obj) ? obj._name : CGMZ.Encyclopedia.UnknownEntry;
 	}
@@ -8662,7 +9197,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.constructor = CGMZ_Window_Encyclopedia
 CGMZ_Window_EncyclopediaDisplay.prototype.initialize = function(rect) {
 	const heightMultiplier = 10; // maximum of 5 windows tall of data to scroll
 	CGMZ_Window_Scrollable.prototype.initialize.call(this, rect, heightMultiplier, CGMZ.Encyclopedia.ScrollWait, CGMZ.Encyclopedia.ScrollSpeed, CGMZ.Encyclopedia.AutoScroll, CGMZ.Encyclopedia.ScrollDeceleration);
-	this.setBackgroundType(2 * (CGMZ.Encyclopedia.TransparentWindows));
+	if(Imported.CGMZ_WindowBackgrounds && CGMZ.Encyclopedia.DisplayWindowBackground) this.CGMZ_setWindowBackground(CGMZ.Encyclopedia.DisplayWindowBackground);
+	if(Imported.CGMZ_WindowSettings && CGMZ.Encyclopedia.DisplayWindowSettings) this.CGMZ_setWindowSettings(CGMZ.Encyclopedia.DisplayWindowSettings);
 	this._data = null;
 	this._buyMode = false;
 	this._iconBitmap = ImageManager.loadSystem('IconSet'); //only load this once
@@ -8689,29 +9225,13 @@ CGMZ_Window_EncyclopediaDisplay.prototype.setBuyMode = function(mode) {
 	this._buyMode = mode;
 };
 //-----------------------------------------------------------------------------
-// Set the window padding
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaDisplay.prototype.updatePadding = function() {
-	this.padding = CGMZ.Encyclopedia.DisplayWindowPadding;
-};
-//-----------------------------------------------------------------------------
-// Load Proper Windowskin
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaDisplay.prototype.loadWindowskin = function() {
-	if(CGMZ.Encyclopedia.DisplayWindowskin) {
-		const windowskin = CGMZ_Utils.getImageData(CGMZ.Encyclopedia.DisplayWindowskin, "img");
-		this.windowskin = ImageManager.loadBitmap(windowskin.folder, windowskin.filename);
-	} else {
-		CGMZ_Window_Scrollable.prototype.loadWindowskin.call(this);
-	}
-};
-//-----------------------------------------------------------------------------
 // Set Item
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.setItem = function(item, symbol) {
 	if(!item || this._data === item) return;
 	if(item === "clear") {
 		this._data = null;
+		this.resetCGMZAnimations();
 		this.contents.clear();
 		this._neededHeight = 0;
 		this.checkForScroll();
@@ -8735,10 +9255,20 @@ CGMZ_Window_EncyclopediaDisplay.prototype.makeObjectId = function() {
 	return (this._data._mainId) ? this._data._mainId : this._data._id;
 };
 //-----------------------------------------------------------------------------
+// Refresh
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.resetCGMZAnimations = function() {
+	this.CGMZ_removeAnimatedRegion("actorWalk");
+	this.CGMZ_removeAnimatedRegion("actorSv");
+	this._animatedActorWalkInfo = {};
+	this._animatedActorSvInfo = {};
+};
+//-----------------------------------------------------------------------------
 // Draw Encyclopedia Entry
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaEntry = function() {
 	this._battlerSprite.hide();
+	this.resetCGMZAnimations();
 	for(const sprite of this._customSprites) {
 		sprite.hide();
 	}
@@ -8783,7 +9313,7 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawUnknownItem = function() {
 	} else {
 		this._neededHeight = this.CGMZ_drawText(CGMZ.Encyclopedia.UnknownEntryDisplay, 0, 0, 0, this.contents.width, 'center');
 	}
-	this._neededHeight += $gameSystem.windowPadding()*2;
+	this._neededHeight += this.padding * 2;
 	this.checkForScroll();
 };
 //-----------------------------------------------------------------------------
@@ -8792,16 +9322,12 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawUnknownItem = function() {
 CGMZ_Window_EncyclopediaDisplay.prototype.loadBestiaryImage = function() {
 	const id = this.makeObjectId();
 	const enemy = $dataEnemies[id];
-	const extraEnemyInfo = $cgmzTemp.getEncyclopediaExtraBestiarySettings(id);
-	if(extraEnemyInfo?.img) {
-		const imgData = CGMZ_Utils.getImageData(extraEnemyInfo.img, "img");
+	const extra = $cgmzTemp.getEncyclopediaExtraBestiarySettings(id);
+	if(extra?.img) {
+		const imgData = CGMZ_Utils.getImageData(extra.img, "img");
 		this._battlerSprite.bitmap = ImageManager.loadBitmap(imgData.folder, imgData.filename);
 	} else {
-		if ($gameSystem.isSideView()) {
-			this._battlerSprite.bitmap = ImageManager.loadSvEnemy(enemy.battlerName);
-		} else {
-			this._battlerSprite.bitmap = ImageManager.loadEnemy(enemy.battlerName);
-		}
+		this._battlerSprite.bitmap = ($gameSystem.isSideView()) ? ImageManager.loadSvEnemy(enemy.battlerName) : ImageManager.loadEnemy(enemy.battlerName)
 	}
 	this._battlerSprite.bitmap.addLoadListener(this.drawBestiary.bind(this));
 };
@@ -8809,70 +9335,83 @@ CGMZ_Window_EncyclopediaDisplay.prototype.loadBestiaryImage = function() {
 // Draw Bestiary Encyclopedia Entry
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawBestiary = function() {
-	const enemy = $dataEnemies[this.makeObjectId()];
+	const id = this.makeObjectId();
+	const enemy = $dataEnemies[id];
+	const extra = $cgmzTemp.getEncyclopediaExtraBestiarySettings(id);
+	const traitTracker = this.populateTraitTracker(enemy.traits);
+	let customHeaderCount = 0;
+	let customInfoCount = 0;
+	let customImgCount = 0;
 	const difficulty = (CGMZ.Encyclopedia.ShowDifficultyMods && Imported.CGMZ_Difficulty) ? $cgmzTemp.getDifficulty($cgmz.getDifficulty()) : null;
 	this._neededHeight = 0;
 	for(const section of CGMZ.Encyclopedia.BestiaryDisplayInfo) {
 		switch(section) {
-			case "Name":
-				this._neededHeight += this.drawEncyclopediaName(enemy.name);
-				break;
+			case "Name": this.drawEncyclopediaName(enemy.name); break;
 			case "Stats":
 				const params = (difficulty) ? enemy.params.map(param => Math.round(param * difficulty._enemyStatModifier)) : enemy.params;
-				this._neededHeight += this.drawEncyclopediaStats(params, false);
+				this.drawEncyclopediaStats(params, false);
 				break;
 			case "Exp":
 				const exp = (difficulty) ? Math.round(enemy.exp * difficulty._enemyExpModifier) : enemy.exp;
 				this.drawEncyclopediaBestiaryExpReward(exp);
-				this._neededHeight += this.lineHeight();
 				break;
-			case "Gold":
-				const gold = (difficulty) ? Math.round(enemy.gold * difficulty._enemyGoldModifier) : enemy.gold;
-				this.drawEncyclopediaBestiaryGoldReward(gold);
-				this._neededHeight += this.lineHeight();
+			case "Gold": this.drawEncyclopediaBestiaryGoldReward(enemy, difficulty); break;
+			case "Drops": this.drawEncyclopediaBestiaryDrops(enemy.dropItems); break;
+			case "Skills": this.drawEncyclopediaBestiarySkills(enemy.actions); break;
+			case "Note": this.drawEncyclopediaMeta(enemy.meta.cgmzdesc); break;
+			case "Sketch": this._neededHeight += this.displayBitmap(enemy.battlerHue); break;
+			case "Discover Date": this.drawEncyclopediaDiscoverDate(this._data._discoverDate); break;
+			case "Kill Count": this.drawBestiaryKillCount(id); break;
+			case "Traits":
+				if(this.hasTraits(traitTracker)) {
+					this.drawEncyclopediaTrait(traitTracker);
+				}
 				break;
-			case "Drops":
-				this.drawEncyclopediaBestiaryDrops(enemy.dropItems); // This function takes care of neededHeight
-				break;
-			case "Skills":
-				this.drawEncyclopediaBestiarySkills(enemy.actions); // This function takes care of neededHeight
-				break;
-			case "Note":
-				this._neededHeight += this.drawEncyclopediaMeta(enemy.meta.cgmzdesc);
-				break;
-			case "Sketch":
-				this._neededHeight += this.displayBitmap(enemy.battlerHue);
-				break;
-			case "Discover Date":
-				this.drawEncyclopediaDiscoverDate(this._data._discoverDate);
-				this._neededHeight += this.lineHeight();
+			case "Traits Header":
+				if(this.hasTraits(traitTracker)) {
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiaryTraitHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
+				}
 				break;
 			case "Stats Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiaryStatsHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiaryStatsHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Drops Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiaryDropsHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiaryDropsHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Note Header":
 				if(enemy.meta.cgmzdesc) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiaryNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiaryNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Sketch Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiarySketchHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiarySketchHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Skills Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiarySkillsHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.BestiarySkillsHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
-			case "Blank Line": this._neededHeight += this.lineHeight();
+			case "Custom Info":
+				const cInfo = extra?.customInfo[customInfoCount++];
+				if(cInfo) {
+					this.drawEncyclopediaExtraCustomInfo(cInfo);
+				}
+				break;
+			case "Custom Header":
+				const cHeader = extra?.customHeader[customHeaderCount++];
+				if(cHeader) {
+					this._neededHeight += this.CGMZ_drawHeader(cHeader, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
+				}
+				break;
+			case "Custom Image":
+				const cImage = extra?.customImage[customImgCount++];
+				if(cImage) {
+					this.drawEncyclopediaExtraCustomImage(cImage);
+				}
+				break;
+			case "Blank Line": this._neededHeight += this.lineHeight(); break;
+			case "Custom Space": this._neededHeight += CGMZ.Encyclopedia.CustomSpaceAmount;
 		}
 	}
-	this._neededHeight += $gameSystem.windowPadding()*2;
+	this._neededHeight += this.padding * 2;
 	this.checkForScroll();
 };
 //-----------------------------------------------------------------------------
@@ -8881,41 +9420,26 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawBestiary = function() {
 CGMZ_Window_EncyclopediaDisplay.prototype.drawItem = function() {
 	const id = this.makeObjectId();
 	const extra = $cgmzTemp.getEncyclopediaExtraItemSettings(id);
+	let customHeaderCount = 0;
+	let customInfoCount = 0;
+	let customImgCount = 0;
 	const item = $dataItems[id];
 	const effectTracker = this.populateEffectTracker(item.effects);
 	this._neededHeight = 0;
 	for(const section of CGMZ.Encyclopedia.ItemDisplayInfo) {
 		switch(section) {
-			case "Name":
-				this._neededHeight += this.drawEncyclopediaName(item.name);
-				break;
+			case "Name": this.drawEncyclopediaName(item.name); break;
 			case "Icon":
 				(extra?.img?.url) ? this.loadEncyclopediaIconImage(extra.img) : this.drawEncyclopediaLargeIcon(item.iconIndex);
 				break;
-			case "Price":
-				this.drawEncyclopediaPrice(item.price);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Key Item":
-				this.drawEncyclopediaKeyItem(item.itypeId);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Possession":
-				this.drawEncyclopediaPossession($gameParty.numItems(item));
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Success Rate":
-				this.drawEncyclopediaSuccessRate(item.successRate);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Consumable":
-				this.drawEncyclopediaConsumable(item.consumable);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Price": this.drawEncyclopediaPrice(item.price); break;
+			case "Key Item": this.drawEncyclopediaKeyItem(item.itypeId); break;
+			case "Possession": this.drawEncyclopediaPossession($gameParty.numItems(item)); break;
+			case "Success Rate": this.drawEncyclopediaSuccessRate(item.successRate); break;
+			case "Consumable": this.drawEncyclopediaConsumable(item.consumable); break;
 			case "TP Gain":
 				if(item.tpGain) {
 					this.drawUserTPGain(item.tpGain);
-					this._neededHeight += this.lineHeight();
 				}
 				break;
 			case "Effects":
@@ -8923,40 +9447,48 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawItem = function() {
 					this.drawEncyclopediaEffects(effectTracker); // This function takes care of needed height itself
 				}
 				break;
-			case "Description":
-				this._neededHeight += this.drawEncyclopediaDescription(item.description);
-				break;
-			case "Note":
-				this._neededHeight += this.drawEncyclopediaMeta(item.meta.cgmzdesc);
-				break;
-			case "Discover Date":
-				this.drawEncyclopediaDiscoverDate(this._data._discoverDate);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Description": this.drawEncyclopediaDescription(item.description); break;
+			case "Note": this.drawEncyclopediaMeta(item.meta.cgmzdesc); break;
+			case "Discover Date": this.drawEncyclopediaDiscoverDate(this._data._discoverDate); break;
 			case "Info Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.ItemInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ItemInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Effect Header":
 				if(this.hasEffects(effectTracker)) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.ItemEffectHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ItemEffectHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Note Header":
 				if(item.meta.cgmzdesc) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.ItemNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ItemNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Description Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.ItemDescriptionHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ItemDescriptionHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
-			case "Blank Line": this._neededHeight += this.lineHeight();
+			case "Custom Info":
+				const cInfo = extra?.customInfo[customInfoCount++];
+				if(cInfo) {
+					this.drawEncyclopediaExtraCustomInfo(cInfo);
+				}
+				break;
+			case "Custom Header":
+				const cHeader = extra?.customHeader[customHeaderCount++];
+				if(cHeader) {
+					this._neededHeight += this.CGMZ_drawHeader(cHeader, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
+				}
+				break;
+			case "Custom Image":
+				const cImage = extra?.customImage[customImgCount++];
+				if(cImage) {
+					this.drawEncyclopediaExtraCustomImage(cImage);
+				}
+				break;
+			case "Blank Line": this._neededHeight += this.lineHeight(); break;
+			case "Custom Space": this._neededHeight += CGMZ.Encyclopedia.CustomSpaceAmount;
 		}
 	}
-	this._neededHeight += $gameSystem.windowPadding()*2;
+	this._neededHeight += this.padding * 2;
 	this.checkForScroll();
 };
 //-----------------------------------------------------------------------------
@@ -8965,79 +9497,73 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawItem = function() {
 CGMZ_Window_EncyclopediaDisplay.prototype.drawArmor = function() {
 	const id = this.makeObjectId();
 	const extra = $cgmzTemp.getEncyclopediaExtraArmorSettings(id);
+	let customHeaderCount = 0;
+	let customInfoCount = 0;
+	let customImgCount = 0;
 	const armor = $dataArmors[id];
 	const traitTracker = this.populateTraitTracker(armor.traits);
 	this._neededHeight = 0;
 	for(const section of CGMZ.Encyclopedia.ArmorDisplayInfo) {
 		switch(section) {
-			case "Name":
-				this._neededHeight += this.drawEncyclopediaName(armor.name);
-				break;
+			case "Name": this.drawEncyclopediaName(armor.name); break;
 			case "Icon":
 				(extra?.img?.url) ? this.loadEncyclopediaIconImage(extra.img) : this.drawEncyclopediaLargeIcon(armor.iconIndex);
 				break;
-			case "Price":
-				this.drawEncyclopediaPrice(armor.price);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Equip Type":
-				this.drawEncyclopediaType($dataSystem.equipTypes[armor.etypeId], 'equip');
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Possession":
-				this.drawEncyclopediaPossession($gameParty.numItems(armor));
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Armor Type":
-				this.drawEncyclopediaType($dataSystem.armorTypes[armor.atypeId], 'armor');
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Stats":
-				this._neededHeight += this.drawEncyclopediaStats(armor.params, true);
-				break;
+			case "Price": this.drawEncyclopediaPrice(armor.price); break;
+			case "Equip Type": this.drawEncyclopediaType($dataSystem.equipTypes[armor.etypeId], 'equip'); break;
+			case "Possession": this.drawEncyclopediaPossession($gameParty.numItems(armor)); break;
+			case "Armor Type": this.drawEncyclopediaType($dataSystem.armorTypes[armor.atypeId], 'armor'); break;
+			case "Stats": this.drawEncyclopediaStats(armor.params, true); break;
 			case "Traits":
 				if(this.hasTraits(traitTracker)) {
-					this.drawEncyclopediaTrait(traitTracker); // This function takes care of needed height itself
+					this.drawEncyclopediaTrait(traitTracker);
 				}
 				break;
-			case "Description":
-				this._neededHeight += this.drawEncyclopediaDescription(armor.description);
-				break;
-			case "Note":
-				this._neededHeight += this.drawEncyclopediaMeta(armor.meta.cgmzdesc);
-				break;
-			case "Discover Date":
-				this.drawEncyclopediaDiscoverDate(this._data._discoverDate);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Description": this.drawEncyclopediaDescription(armor.description); break;
+			case "Note": this.drawEncyclopediaMeta(armor.meta.cgmzdesc); break;
+			case "Discover Date": this.drawEncyclopediaDiscoverDate(this._data._discoverDate); break;
 			case "Info Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Trait Header":
 				if(this.hasTraits(traitTracker)) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorTraitHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorTraitHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Note Header":
 				if(armor.meta.cgmzdesc) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Description Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorDescriptionHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorDescriptionHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Stat Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorStatHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ArmorStatHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
-			case "Blank Line": this._neededHeight += this.lineHeight();
+			case "Custom Info":
+				const cInfo = extra?.customInfo[customInfoCount++];
+				if(cInfo) {
+					this.drawEncyclopediaExtraCustomInfo(cInfo);
+				}
+				break;
+			case "Custom Header":
+				const cHeader = extra?.customHeader[customHeaderCount++];
+				if(cHeader) {
+					this._neededHeight += this.CGMZ_drawHeader(cHeader, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
+				}
+				break;
+			case "Custom Image":
+				const cImage = extra?.customImage[customImgCount++];
+				if(cImage) {
+					this.drawEncyclopediaExtraCustomImage(cImage);
+				}
+				break;
+			case "Blank Line": this._neededHeight += this.lineHeight(); break;
+			case "Custom Space": this._neededHeight += CGMZ.Encyclopedia.CustomSpaceAmount;
 		}
 	}
-	this._neededHeight += $gameSystem.windowPadding()*2;
+	this._neededHeight += this.padding * 2;
 	this.checkForScroll();
 };
 //-----------------------------------------------------------------------------
@@ -9046,79 +9572,73 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawArmor = function() {
 CGMZ_Window_EncyclopediaDisplay.prototype.drawWeapon = function() {
 	const id = this.makeObjectId();
 	const extra = $cgmzTemp.getEncyclopediaExtraWeaponSettings(id);
+	let customHeaderCount = 0;
+	let customInfoCount = 0;
+	let customImgCount = 0;
 	const weapon = $dataWeapons[id];
 	const traitTracker = this.populateTraitTracker(weapon.traits);
 	this._neededHeight = 0;
 	for(const section of CGMZ.Encyclopedia.WeaponDisplayInfo) {
 		switch(section) {
-			case "Name":
-				this._neededHeight += this.drawEncyclopediaName(weapon.name);
-				break;
+			case "Name": this.drawEncyclopediaName(weapon.name); break;
 			case "Icon":
 				(extra?.img?.url) ? this.loadEncyclopediaIconImage(extra.img) : this.drawEncyclopediaLargeIcon(weapon.iconIndex);
 				break;
-			case "Price":
-				this.drawEncyclopediaPrice(weapon.price);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Equip Type":
-				this.drawEncyclopediaType($dataSystem.equipTypes[weapon.etypeId], 'equip');
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Possession":
-				this.drawEncyclopediaPossession($gameParty.numItems(weapon));
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Weapon Type":
-				this.drawEncyclopediaType($dataSystem.weaponTypes[weapon.wtypeId], 'weapon');
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Stats":
-				this._neededHeight += this.drawEncyclopediaStats(weapon.params, true);
-				break;
+			case "Price": this.drawEncyclopediaPrice(weapon.price); break;
+			case "Equip Type": this.drawEncyclopediaType($dataSystem.equipTypes[weapon.etypeId], 'equip'); break;
+			case "Possession": this.drawEncyclopediaPossession($gameParty.numItems(weapon)); break;
+			case "Weapon Type": this.drawEncyclopediaType($dataSystem.weaponTypes[weapon.wtypeId], 'weapon'); break;
+			case "Stats": this.drawEncyclopediaStats(weapon.params, true); break;
 			case "Traits":
 				if(this.hasTraits(traitTracker)) {
-					this.drawEncyclopediaTrait(traitTracker); // This function takes care of needed height itself
+					this.drawEncyclopediaTrait(traitTracker);
 				}
 				break;
-			case "Description":
-				this._neededHeight += this.drawEncyclopediaDescription(weapon.description);
-				break;
-			case "Note":
-				this._neededHeight += this.drawEncyclopediaMeta(weapon.meta.cgmzdesc);
-				break;
-			case "Discover Date":
-				this.drawEncyclopediaDiscoverDate(this._data._discoverDate);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Description": this.drawEncyclopediaDescription(weapon.description); break;
+			case "Note": this.drawEncyclopediaMeta(weapon.meta.cgmzdesc); break;
+			case "Discover Date": this.drawEncyclopediaDiscoverDate(this._data._discoverDate); break;
 			case "Info Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Trait Header":
 				if(this.hasTraits(traitTracker)) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponTraitHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponTraitHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Note Header":
 				if(weapon.meta.cgmzdesc) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Description Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponDescriptionHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponDescriptionHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Stat Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponStatHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.WeaponStatHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
-			case "Blank Line": this._neededHeight += this.lineHeight();
+			case "Custom Info":
+				const cInfo = extra?.customInfo[customInfoCount++];
+				if(cInfo) {
+					this.drawEncyclopediaExtraCustomInfo(cInfo);
+				}
+				break;
+			case "Custom Header":
+				const cHeader = extra?.customHeader[customHeaderCount++];
+				if(cHeader) {
+					this._neededHeight += this.CGMZ_drawHeader(cHeader, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
+				}
+				break;
+			case "Custom Image":
+				const cImage = extra?.customImage[customImgCount++];
+				if(cImage) {
+					this.drawEncyclopediaExtraCustomImage(cImage);
+				}
+				break;
+			case "Blank Line": this._neededHeight += this.lineHeight(); break;
+			case "Custom Space": this._neededHeight += CGMZ.Encyclopedia.CustomSpaceAmount;
 		}
 	}
-	this._neededHeight += $gameSystem.windowPadding()*2;
+	this._neededHeight += this.padding * 2;
 	this.checkForScroll();
 };
 //-----------------------------------------------------------------------------
@@ -9127,74 +9647,73 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawWeapon = function() {
 CGMZ_Window_EncyclopediaDisplay.prototype.drawSkill = function() {
 	const id = this.makeObjectId();
 	const extra = $cgmzTemp.getEncyclopediaExtraSkillSettings(id);
+	let customHeaderCount = 0;
+	let customInfoCount = 0;
+	let customImgCount = 0;
 	const skill = $dataSkills[id];
 	const effectTracker = this.populateEffectTracker(skill.effects);
 	this._neededHeight = 0;
 	for(const section of CGMZ.Encyclopedia.SkillDisplayInfo) {
 		switch(section) {
-			case "Name":
-				this._neededHeight += this.drawEncyclopediaName(skill.name);
-				break;
+			case "Name": this.drawEncyclopediaName(skill.name); break;
 			case "Icon":
 				(extra?.img?.url) ? this.loadEncyclopediaIconImage(extra.img) : this.drawEncyclopediaLargeIcon(skill.iconIndex);
 				break;
-			case "Type":
-				this.drawEncyclopediaType($dataSystem.skillTypes[skill.stypeId], 'skill');
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Costs":
-				this.drawSkillCosts(skill.mpCost, skill.tpCost);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Success Rate":
-				this.drawEncyclopediaSuccessRate(skill.successRate);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Type": this.drawEncyclopediaType($dataSystem.skillTypes[skill.stypeId], 'skill'); break;
+			case "Costs": this.drawSkillCosts(skill.mpCost, skill.tpCost); break;
+			case "Success Rate": this.drawEncyclopediaSuccessRate(skill.successRate); break;
 			case "TP Gain":
 				if(skill.tpGain) {
 					this.drawUserTPGain(skill.tpGain);
-					this._neededHeight += this.lineHeight();
 				}
 				break;
 			case "Effects":
 				if(this.hasEffects(effectTracker)) {
-					this.drawEncyclopediaEffects(effectTracker); // This function takes care of needed height itself
+					this.drawEncyclopediaEffects(effectTracker);
 				}
 				break;
-			case "Description":
-				this._neededHeight += this.drawEncyclopediaDescription(skill.description);
-				break;
-			case "Note":
-				this._neededHeight += this.drawEncyclopediaMeta(skill.meta.cgmzdesc);
-				break;
-			case "Discover Date":
-				this.drawEncyclopediaDiscoverDate(this._data._discoverDate);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Description": this.drawEncyclopediaDescription(skill.description); break;
+			case "Note": this.drawEncyclopediaMeta(skill.meta.cgmzdesc); break;
+			case "Discover Date": this.drawEncyclopediaDiscoverDate(this._data._discoverDate); break;
 			case "Info Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.SkillInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.SkillInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Description Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.SkillDescriptionHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.SkillDescriptionHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Effect Header":
 				if(this.hasEffects(effectTracker)) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.SkillEffectHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.SkillEffectHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Note Header":
 				if(skill.meta.cgmzdesc) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.SkillNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.SkillNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
-			case "Blank Line": this._neededHeight += this.lineHeight();
+			case "Custom Info":
+				const cInfo = extra?.customInfo[customInfoCount++];
+				if(cInfo) {
+					this.drawEncyclopediaExtraCustomInfo(cInfo);
+				}
+				break;
+			case "Custom Header":
+				const cHeader = extra?.customHeader[customHeaderCount++];
+				if(cHeader) {
+					this._neededHeight += this.CGMZ_drawHeader(cHeader, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
+				}
+				break;
+			case "Custom Image":
+				const cImage = extra?.customImage[customImgCount++];
+				if(cImage) {
+					this.drawEncyclopediaExtraCustomImage(cImage);
+				}
+				break;
+			case "Blank Line": this._neededHeight += this.lineHeight(); break;
+			case "Custom Space": this._neededHeight += CGMZ.Encyclopedia.CustomSpaceAmount;
 		}
 	}
-	this._neededHeight += $gameSystem.windowPadding()*2;
+	this._neededHeight += this.padding * 2;
 	this.checkForScroll();
 };
 //-----------------------------------------------------------------------------
@@ -9203,65 +9722,65 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawSkill = function() {
 CGMZ_Window_EncyclopediaDisplay.prototype.drawState = function() {
 	const id = this.makeObjectId();
 	const extra = $cgmzTemp.getEncyclopediaExtraStateSettings(id);
+	let customHeaderCount = 0;
+	let customInfoCount = 0;
+	let customImgCount = 0;
 	const state = $dataStates[id];
 	const traitTracker = this.populateTraitTracker(state.traits);
 	this._neededHeight = 0;
 	for(const section of CGMZ.Encyclopedia.StateDisplayInfo) {
 		switch(section) {
-			case "Name":
-				this._neededHeight += this.drawEncyclopediaName(state.name);
-				break;
+			case "Name": this.drawEncyclopediaName(state.name); break;
 			case "Icon":
 				(extra?.img?.url) ? this.loadEncyclopediaIconImage(extra.img) : this.drawEncyclopediaLargeIcon(state.iconIndex);
 				break;
-			case "Duration":
-				this.drawStateDuration(state.autoRemovalTiming, state.minTurns, state.maxTurns);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Battle End Removal":
-				this.drawStateRemoval(state.removeAtBattleEnd, CGMZ.Encyclopedia.BattleRemovalText);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Walking Removal":
-				this.drawStateRemoval(state.removeByWalking, CGMZ.Encyclopedia.WalkingRemovalText);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Damage Removal":
-				this.drawStateRemoval(state.removeByDamage, CGMZ.Encyclopedia.DamageRemovalText);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Duration": this.drawStateDuration(state.autoRemovalTiming, state.minTurns, state.maxTurns); break;
+			case "Battle End Removal": this.drawStateRemoval(state.removeAtBattleEnd, CGMZ.Encyclopedia.BattleRemovalText); break;
+			case "Walking Removal": this.drawStateRemoval(state.removeByWalking, CGMZ.Encyclopedia.WalkingRemovalText); break;
+			case "Damage Removal": this.drawStateRemoval(state.removeByDamage, CGMZ.Encyclopedia.DamageRemovalText); break;
 			case "Traits":
 				if(this.hasTraits(traitTracker)) {
-					this.drawEncyclopediaTrait(traitTracker); // This function takes care of needed height itself
+					this.drawEncyclopediaTrait(traitTracker);
 				}
 				break;
-			case "Note":
-				this._neededHeight += this.drawEncyclopediaMeta(state.meta.cgmzdesc);
-				break;
-			case "Discover Date":
-				this.drawEncyclopediaDiscoverDate(this._data._discoverDate);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Note": this.drawEncyclopediaMeta(state.meta.cgmzdesc); break;
+			case "Discover Date": this.drawEncyclopediaDiscoverDate(this._data._discoverDate); break;
 			case "Info Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.StateInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.StateInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Trait Header":
 				if(this.hasTraits(traitTracker)) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.StateTraitHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.StateTraitHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Note Header":
 				if(state.meta.cgmzdesc) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.StateNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.StateNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
-			case "Blank Line": this._neededHeight += this.lineHeight();
+			case "Custom Info":
+				const cInfo = extra?.customInfo[customInfoCount++];
+				if(cInfo) {
+					this.drawEncyclopediaExtraCustomInfo(cInfo);
+				}
+				break;
+			case "Custom Header":
+				const cHeader = extra?.customHeader[customHeaderCount++];
+				if(cHeader) {
+					this._neededHeight += this.CGMZ_drawHeader(cHeader, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
+				}
+				break;
+			case "Custom Image":
+				const cImage = extra?.customImage[customImgCount++];
+				if(cImage) {
+					this.drawEncyclopediaExtraCustomImage(cImage);
+				}
+				break;
+			case "Blank Line": this._neededHeight += this.lineHeight(); break;
+			case "Custom Space": this._neededHeight += CGMZ.Encyclopedia.CustomSpaceAmount;
 		}
 	}
-	this._neededHeight += $gameSystem.windowPadding()*2;
+	this._neededHeight += this.padding * 2;
 	this.checkForScroll();
 };
 //-----------------------------------------------------------------------------
@@ -9270,84 +9789,108 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawState = function() {
 CGMZ_Window_EncyclopediaDisplay.prototype.drawActor = function() {
 	const id = this.makeObjectId();
 	const actorData = $dataActors[id];
-	const actorGame = $gameActors.actor(this.makeObjectId());
+	const actorGame = $gameActors.actor(id);
+	const extra = $cgmzTemp.getEncyclopediaExtraActorSettings(id);
+	let customHeaderCount = 0;
+	let customInfoCount = 0;
+	let customImgCount = 0;
 	const traitTracker = this.populateTraitTracker(actorData.traits);
 	this._neededHeight = 0;
 	for(const section of CGMZ.Encyclopedia.ActorDisplayInfo) {
 		switch(section) {
-			case "Name":
-				this._neededHeight += this.drawEncyclopediaName(actorGame.name());
-				break;
+			case "Name": this.drawEncyclopediaName(actorGame.name()); break;
 			case "Face":
-				this.drawEncyclopediaActorFace(actorGame.faceName(), actorGame.faceIndex());
-				if(CGMZ.Encyclopedia.CenterIcons) {
-					this._neededHeight += 144;
+				this.loadEncyclopediaActorFace(actorGame.faceName(), actorGame.faceIndex());
+				if(CGMZ.Encyclopedia.CenterFace) {
+					this._neededHeight += ImageManager.faceHeight;
 				} else {
 					this._iconDisplacement.yStart = this._neededHeight;
-					this._iconDisplacement.yEnd = this._neededHeight + 140;
-					this._iconDisplacement.xEnd = 148; // 4px padding
+					this._iconDisplacement.yEnd = this._neededHeight + ImageManager.faceHeight;
+					this._iconDisplacement.xEnd = ImageManager.faceWidth + 4; // 4px padding
+					this._iconDisplacement.isDisplaced = true;
+				}
+				break;
+			case "Walk Sprite":
+				this.setupActorWalkAnimation(actorGame.characterName(), actorGame.characterIndex());
+				if(CGMZ.Encyclopedia.CenterFace) {
+					this._neededHeight += CGMZ.Encyclopedia.ActorSpriteHeight;
+				} else {
+					this._iconDisplacement.yStart = this._neededHeight;
+					this._iconDisplacement.yEnd = this._neededHeight + CGMZ.Encyclopedia.ActorSpriteHeight;
+					this._iconDisplacement.xEnd = CGMZ.Encyclopedia.ActorSpriteWidth + 4; // 4px padding
+					this._iconDisplacement.isDisplaced = true;
+				}
+				break;
+			case "Battle Sprite":
+				this.setupActorSvAnimation(actorGame.battlerName());
+				if(CGMZ.Encyclopedia.CenterFace) {
+					this._neededHeight += CGMZ.Encyclopedia.ActorSpriteHeight;
+				} else {
+					this._iconDisplacement.yStart = this._neededHeight;
+					this._iconDisplacement.yEnd = this._neededHeight + CGMZ.Encyclopedia.ActorSpriteHeight;
+					this._iconDisplacement.xEnd = CGMZ.Encyclopedia.ActorSpriteWidth + 4; // 4px padding
 					this._iconDisplacement.isDisplaced = true;
 				}
 				break;
 			case "Nickname":
-				this.drawEncyclopediaNickname(actorGame.nickname());
-				this._neededHeight += this.lineHeight();
+				if(actorGame.nickname()) {
+					this.drawEncyclopediaNickname(actorGame.nickname());
+				}
 				break;
-			case "Class":
-				this.drawEncyclopediaClass(actorGame.currentClass().name);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Initial Level":
-				this.drawEncyclopediaActorLevel(actorData.initialLevel, CGMZ.Encyclopedia.InitialLevelText);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Max Level":
-				this.drawEncyclopediaActorLevel(actorData.maxLevel, CGMZ.Encyclopedia.MaxLevelText);
-				this._neededHeight += this.lineHeight();
-				break;
-			case "Profile":
-				this._neededHeight += this.drawEncyclopediaActorProfile(actorGame.profile());
-				break;
+			case "Class": this.drawEncyclopediaClass(actorGame.currentClass().name); break;
+			case "Initial Level": this.drawEncyclopediaActorLevel(actorData.initialLevel, CGMZ.Encyclopedia.InitialLevelText); break;
+			case "Max Level": this.drawEncyclopediaActorLevel(actorData.maxLevel, CGMZ.Encyclopedia.MaxLevelText); break;
+			case "Profile": this.drawEncyclopediaActorProfile(actorGame.profile()); break;
 			case "Stats":
 				const stats = [actorGame.paramBase(0),actorGame.paramBase(1),actorGame.paramBase(2),actorGame.paramBase(3),actorGame.paramBase(4),actorGame.paramBase(5),actorGame.paramBase(6),actorGame.paramBase(7)];
-				this._neededHeight += this.drawEncyclopediaStats(stats, false);
+				this.drawEncyclopediaStats(stats, false);
 				break;
 			case "Traits":
 				if(this.hasTraits(traitTracker)) {
-					this.drawEncyclopediaTrait(traitTracker); // This function takes care of needed height itself
+					this.drawEncyclopediaTrait(traitTracker);
 				}
 				break;
-			case "Note":
-				this._neededHeight += this.drawEncyclopediaMeta(actorData.meta.cgmzdesc);
-				break;
-			case "Discover Date":
-				this.drawEncyclopediaDiscoverDate(this._data._discoverDate);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Note": this.drawEncyclopediaMeta(actorData.meta.cgmzdesc); break;
+			case "Discover Date": this.drawEncyclopediaDiscoverDate(this._data._discoverDate); break;
 			case "Info Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.ActorInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ActorInfoHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Stat Header":
-				this.CGMZ_drawHeader(CGMZ.Encyclopedia.ActorStatHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-				this._neededHeight += this.lineHeight();
+				this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ActorStatHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				break;
 			case "Trait Header":
 				if(this.hasTraits(traitTracker)) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.ActorTraitHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ActorTraitHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
 			case "Note Header":
 				if(actorData.meta.cgmzdesc) {
-					this.CGMZ_drawHeader(CGMZ.Encyclopedia.ActorNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
-					this._neededHeight += this.lineHeight();
+					this._neededHeight += this.CGMZ_drawHeader(CGMZ.Encyclopedia.ActorNoteHeaderText, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
 				}
 				break;
-			case "Blank Line": this._neededHeight += this.lineHeight();
+			case "Custom Info":
+				const cInfo = extra?.customInfo[customInfoCount++];
+				if(cInfo) {
+					this.drawEncyclopediaExtraCustomInfo(cInfo);
+				}
+				break;
+			case "Custom Header":
+				const cHeader = extra?.customHeader[customHeaderCount++];
+				if(cHeader) {
+					this._neededHeight += this.CGMZ_drawHeader(cHeader, this._neededHeight, CGMZ.Encyclopedia.HeaderColor1, CGMZ.Encyclopedia.HeaderColor2);
+				}
+				break;
+			case "Custom Image":
+				const cImage = extra?.customImage[customImgCount++];
+				if(cImage) {
+					this.drawEncyclopediaExtraCustomImage(cImage);
+				}
+				break;
+			case "Blank Line": this._neededHeight += this.lineHeight(); break;
+			case "Custom Space": this._neededHeight += CGMZ.Encyclopedia.CustomSpaceAmount;
 		}
 	}
-	this._neededHeight += $gameSystem.windowPadding()*2;
+	this._neededHeight += this.padding * 2;
 	this.checkForScroll();
 };
 //-----------------------------------------------------------------------------
@@ -9424,10 +9967,10 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawCustom = function() {
 		switch(section) {
 			case "Name":
 				const name = this._data._displayName || this._data._name;
-				this._neededHeight += this.drawEncyclopediaName(name);
+				this.drawEncyclopediaName(name);
 				break;
 			case "Description":
-				this._neededHeight += this.drawCustomDescription(this._data._description, descriptionImages);
+				this.drawCustomDescription(this._data._description, descriptionImages);
 				this.resetFontSettings();
 				break;
 			case "Sketch":
@@ -9437,10 +9980,7 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawCustom = function() {
 					this._neededHeight += this.displayBitmap(0);
 				}
 				break;
-			case "Discover Date":
-				this.drawEncyclopediaDiscoverDate(this._data._discoverDate);
-				this._neededHeight += this.lineHeight();
-				break;
+			case "Discover Date": this.drawEncyclopediaDiscoverDate(this._data._discoverDate); break;
 			case "Custom Info":
 				if(this._data._customInfo[customInfo]) {
 					this._neededHeight += this.CGMZ_drawText(this._data._customInfo[customInfo++], 0, 0, this._neededHeight, this.contents.width, "left");
@@ -9465,10 +10005,11 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawCustom = function() {
 					this._neededHeight += this.lineHeight();
 				}
 				break;
-			case "Blank Line": this._neededHeight += this.lineHeight();
+			case "Blank Line": this._neededHeight += this.lineHeight(); break;
+			case "Custom Space": this._neededHeight += CGMZ.Encyclopedia.CustomSpaceAmount;
 		}
 	}
-	this._neededHeight += $gameSystem.windowPadding()*2;
+	this._neededHeight += this.padding * 2;
 	this.checkForScroll();
 };
 //-----------------------------------------------------------------------------
@@ -9498,66 +10039,121 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaName = function(name) 
 	const width = this.adjustWidthForIconDisplacement();
 	const x = this.adjustXForIconDisplacement();
 	this.contents.fontBold = true;
-	const outputHeight = this.CGMZ_drawTextLine(name, x, this._neededHeight, width, 'center');
+	this._neededHeight += this.CGMZ_drawTextLine(name, x, this._neededHeight, width, 'center');
 	this.contents.fontBold = false;
-	return outputHeight;
-};
-//-----------------------------------------------------------------------------
-// Draws a standard Encyclopedia line - used for all categories
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaStandardLine = function(label, descriptor, x, y, width) {
-	const totalString = '\\c[' + CGMZ.Encyclopedia.LabelColor + ']' + label + '\\c[0]' + descriptor;
-	this.CGMZ_drawTextLine(totalString, x, y, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw label / header text
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawLabel = function(label, x, y, alignment = "left") {
-	this.changeTextColor(ColorManager.textColor(CGMZ.Encyclopedia.LabelColor));
-	this.drawText(label, x, y, this.contents.width - x, alignment);
-	this.changeTextColor(ColorManager.normalColor());
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${label}\\c[0]`;
+	this.CGMZ_drawTextLine(string, x, y, this.contents.width - x, alignment);
 };
 //-----------------------------------------------------------------------------
 // Draws text array with descriptor in first line.
 // Makes sure to have enough space for each item.
-// Returns total output height
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawTextArray = function(label, array, separator = " ") {
-	this.drawLabel(label, 0, this._neededHeight);
-	const xOffset = this.textWidth(label);
-	const string = array.join(separator);
-	const outputHeight = this.CGMZ_drawText(string, 0, xOffset, this._neededHeight, this.contents.width);
-	return outputHeight;
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${label}\\c[0]${array.join(separator)}`;
+	this._neededHeight += this.CGMZ_drawText(string, 0, 0, this._neededHeight, this.contents.width);
 };
 //-----------------------------------------------------------------------------
 // Draw Items (skill, state, etc) - Draws skills with icon with enough space on line
 // Returns output height
 //-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaDisplay.prototype.drawItemNames = function(label, x, width, itemIds, symbol) {
+CGMZ_Window_EncyclopediaDisplay.prototype.drawItemNames = function(label, itemIds, symbol) {
 	const itemStrings = [];
 	for(const itemId of itemIds) {
 		const item = (symbol === 'skill') ? $dataSkills[itemId] : $dataStates[itemId];
 		const stringRepresentation = "\\i[" + item.iconIndex + "]" + item.name;
 		itemStrings.push(stringRepresentation);
 	}
-	this.drawLabel(label, x, this._neededHeight);
-	const xOffset = x + this.textWidth(label)
-	const string = itemStrings.join(", ");
-	const outputHeight = this.CGMZ_drawText(string, x, xOffset, this._neededHeight, width);
-	return outputHeight;
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${label}\\c[0]${itemStrings.join(", ")}`;
+	this._neededHeight += this.CGMZ_drawText(string, 0, 0, this._neededHeight, this.contents.width);
+};
+//-----------------------------------------------------------------------------
+// Load Actor Face - used for actor
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.loadEncyclopediaActorFace = function(faceName, faceIndex) {
+	const bitmap = ImageManager.loadFace(faceName);
+	bitmap.addLoadListener(this.drawEncyclopediaActorFace.bind(this, bitmap, faceIndex, this._neededHeight));
 };
 //-----------------------------------------------------------------------------
 // Draw Actor Face - used for actor
 //-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaActorFace = function(faceName, faceIndex) {
-	const bitmap = ImageManager.loadFace(faceName);
+CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaActorFace = function(bitmap, index, height) {
 	const pw = ImageManager.faceWidth;
 	const ph = ImageManager.faceHeight;
-	const dx = CGMZ.Encyclopedia.CenterIcons ? (this.contents.width / 2) - (pw / 2) : 0;
-	const dy = this._neededHeight;
-	const sx = Math.floor((faceIndex % 4) * pw);
-	const sy = Math.floor(Math.floor(faceIndex / 4) * ph);
+	const dx = CGMZ.Encyclopedia.CenterFace ? (this.contents.width / 2) - (pw / 2) : 0;
+	const dy = height;
+	const sx = Math.floor((index % 4) * pw);
+	const sy = Math.floor(Math.floor(index / 4) * ph);
 	this.contents.blt(bitmap, sx, sy, pw, ph, dx, dy);
+};
+//-----------------------------------------------------------------------------
+// Set up actor walk animation - used for actor
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.setupActorWalkAnimation = function(name, index) {
+	const x = CGMZ.Encyclopedia.CenterFace ? this.contents.width / 2 - CGMZ.Encyclopedia.ActorSpriteWidth / 2 : 0;
+	this._animatedActorWalkInfo = {
+		name: name,
+		index: index,
+		xOffset: 0,
+		yOffset: 0,
+		isNegative: false
+	}
+	const region = {
+		id: "actorWalk",
+		rect: new Rectangle(x, this._neededHeight, CGMZ.Encyclopedia.ActorSpriteWidth, CGMZ.Encyclopedia.ActorSpriteHeight),
+		target: "front",
+		frames: 15
+	};
+	this.CGMZ_addAnimatedRegion(region);
+};
+//-----------------------------------------------------------------------------
+// Set up actor walk animation - used for actor
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.setupActorSvAnimation = function(name) {
+	const x = CGMZ.Encyclopedia.CenterFace ? this.contents.width / 2 - CGMZ.Encyclopedia.ActorSpriteWidth / 2 : 0;
+	this._animatedActorSvInfo = {
+		name: name,
+		motion: CGMZ.Encyclopedia.ActorSvMotion, // see Sprite_Actor for motion indexes
+		pattern: 0
+	}
+	const region = {
+		id: "actorSv",
+		rect: new Rectangle(x, this._neededHeight, CGMZ.Encyclopedia.ActorSpriteWidth, CGMZ.Encyclopedia.ActorSpriteHeight),
+		target: "front",
+		frames: 12
+	};
+	this.CGMZ_addAnimatedRegion(region);
+};
+//-----------------------------------------------------------------------------
+// Process animated regions for actor walk / battle sprites
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.CGMZ_processAnimatedRegion = function(region) {
+	switch(region.id) {
+		case 'actorWalk': this.drawEncyclopediaActorWalk(region.rect); break;
+		case 'actorSv': this.drawEncyclopediaActorSv(region.rect); break;
+	}
+};
+//-----------------------------------------------------------------------------
+// Draw Actor Walk - used for actor
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaActorWalk = function(rect) {
+	const xOffset = (this._animatedActorWalkInfo.xOffset < 3) ? this._animatedActorWalkInfo.xOffset : 1;
+	const name = this._animatedActorWalkInfo.name;
+	const index = this._animatedActorWalkInfo.index;
+	this.CGMZ_drawCharacter(name, index, rect.x + rect.width / 2, rect.y + rect.height, xOffset - 1, this._animatedActorWalkInfo.yOffset);
+	this._animatedActorWalkInfo.xOffset = (this._animatedActorWalkInfo.xOffset + 1) % 4;
+};
+//-----------------------------------------------------------------------------
+// Draw Actor Sv - used for actor
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaActorSv = function(rect) {
+	const name = this._animatedActorSvInfo.name;
+	this.CGMZ_drawSvActor(name, rect.x, rect.y, this._animatedActorSvInfo.motion, this._animatedActorSvInfo.pattern);
+	this._animatedActorSvInfo.pattern = (this._animatedActorSvInfo.pattern + 1) % 4;
 };
 //-----------------------------------------------------------------------------
 // Draw Large icon - used for item, armor, weapon, skill, state.
@@ -9610,13 +10206,20 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaIconImage = function(b
 	this.contents.blt(bitmap, sx, sy, sw, sh, x, y, dw, dh);
 };
 //-----------------------------------------------------------------------------
+// Draws extra parameter custom info, used for all default categories to show custom info
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaExtraCustomInfo = function(info) {
+	this._neededHeight += this.CGMZ_drawText(info, 0, 0, this._neededHeight, this.contents.width);
+};
+//-----------------------------------------------------------------------------
 // Draw Discover Date - used by everything
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaDiscoverDate = function(date) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
 	const dateText = (date) ? date : CGMZ.Encyclopedia.UnknownDateText;
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.DiscoverDateText, dateText, x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.DiscoverDateText}\\c[0]${dateText}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw Nickname - used for actor
@@ -9624,7 +10227,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaDiscoverDate = functio
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaNickname = function(nickname) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.NicknameText, nickname, x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.NicknameText}\\c[0]${nickname}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw Class - used for actor
@@ -9632,7 +10236,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaNickname = function(ni
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaClass = function(className) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.ClassText, className, x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.ClassText}\\c[0]${className}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw Actor Level - used for actor
@@ -9640,7 +10245,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaClass = function(class
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaActorLevel = function(level, descriptor) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	this.drawEncyclopediaStandardLine(descriptor, level, x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${descriptor}\\c[0]${level}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw Actor Level - used for actor
@@ -9648,9 +10254,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaActorLevel = function(
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaActorProfile = function(profile) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	const string = '\\c[' + CGMZ.Encyclopedia.LabelColor + ']' + CGMZ.Encyclopedia.ProfileText + '\\c[0]' + profile; 
-	const drawnHeight = this.CGMZ_drawText(string, x, x, this._neededHeight, width, 'left');
-	return drawnHeight;
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.ProfileText}\\c[0]${profile}`; 
+	this._neededHeight += this.CGMZ_drawText(string, x, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw Price - used for item, armor, weapon
@@ -9658,8 +10263,9 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaActorProfile = functio
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaPrice = function(price) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	const descriptor = (price == 0) ? CGMZ.Encyclopedia.NoPriceText : CGMZ_Utils.numberSplit(price) + " " + TextManager.currencyUnit;
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.PriceText, descriptor, x, this._neededHeight, width);
+	const priceString = (price == 0) ? CGMZ.Encyclopedia.NoPriceText : CGMZ_Utils.numberSplit(price) + " " + TextManager.currencyUnit;
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.PriceText}\\c[0]${priceString}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw Key item - used for item
@@ -9667,8 +10273,9 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaPrice = function(price
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaKeyItem = function(itype) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	const descriptor = (itype == 2) ? CGMZ.Encyclopedia.YesText : CGMZ.Encyclopedia.NoText;
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.KeyItemText, descriptor, x, this._neededHeight, width);
+	const itemString = (itype == 2) ? CGMZ.Encyclopedia.YesText : CGMZ.Encyclopedia.NoText;
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.KeyItemText}\\c[0]${itemString}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw Type - Used for armor, weapon, skill
@@ -9690,7 +10297,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaType = function(typeNa
 	}
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	this.drawEncyclopediaStandardLine(descriptor, typeName, x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${descriptor}\\c[0]${typeName}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw Possession - used for item, weapon, armor
@@ -9698,8 +10306,9 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaType = function(typeNa
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaPossession = function(amount) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	const descriptor = CGMZ_Utils.numberSplit(amount);
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.PossessionText, descriptor, x, this._neededHeight, width);
+	const posString = CGMZ_Utils.numberSplit(amount);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.PossessionText}\\c[0]${posString}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw Stats - used by weapon, armors, bestiary, actor
@@ -9707,36 +10316,56 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaPossession = function(
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaStats = function(params, useSign) {
 	const width = this.contents.width / 2; // 2 column display
 	const statArray = ["Max HP","Max MP","Attack","Defense","M Attack","M Defense","Agility","Luck"];
-	let outputHeight = 0;
 	let i = 0;
-	for(const stat of CGMZ.Encyclopedia.StatDisplayInfo) {
-		outputHeight = this.lineHeight()*(Math.trunc(i/2));
-		const statId = statArray.indexOf(stat);
+	for(let i = 0; i < CGMZ.Encyclopedia.StatDisplayInfo.length; i++) {
+		const statId = statArray.indexOf(CGMZ.Encyclopedia.StatDisplayInfo[i]);
 		const x = (i%2 == 0) ? 0 : width;
 		const descriptor1 = TextManager.param(statId) + ": ";
 		const descriptor2 = CGMZ_Utils.numberSplit(params[statId]);
 		const sign = (useSign && params[statId] > 0) ? "+" : "";
-		this.drawEncyclopediaStandardLine(descriptor1, sign + descriptor2, x, this._neededHeight + outputHeight, width);
-		i++;
+		const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${descriptor1}\\c[0]${sign + descriptor2}`;
+		const outputHeight = this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
+		if(x !== 0) this._neededHeight += outputHeight;
 	}
-	outputHeight += this.lineHeight();
-	return outputHeight;
+	this._neededHeight += this.lineHeight();
 };
 //-----------------------------------------------------------------------------
 // Draw exp drop of an enemy - used by the Bestiary
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaBestiaryExpReward = function(exp) {
+	const x = this.adjustXForIconDisplacement();
+	const width = this.adjustWidthForIconDisplacement();
 	const descriptor1 = TextManager.basic(8) + ": "; // full EXP string (not abbr)
 	const descriptor2 = CGMZ_Utils.numberSplit(exp);
-	this.drawEncyclopediaStandardLine(descriptor1, descriptor2, 0, this._neededHeight, this.contents.width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${descriptor1}\\c[0]${descriptor2}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw gold drop of an enemy - used by the Bestiary
 //-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaBestiaryGoldReward = function(gold) {
+CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaBestiaryGoldReward = function(enemy, difficulty) {
+	const gold = (difficulty) ? Math.round(enemy.gold * difficulty._enemyGoldModifier) : enemy.gold;
+	let x = this.adjustXForIconDisplacement();
+	let width = this.adjustWidthForIconDisplacement();
 	const descriptor1 = (TextManager.currencyUnit).trim() + ": ";
 	const descriptor2 = CGMZ_Utils.numberSplit(gold);
-	this.drawEncyclopediaStandardLine(descriptor1, descriptor2, 0, this._neededHeight, this.contents.width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${descriptor1}\\c[0]${descriptor2}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
+	if(Imported.CGMZ_CurrencySystem) {
+		if(enemy.meta?.cgmzcurrencyrewards) {
+			const rewards = enemy.meta.cgmzcurrencyrewards.split(",");
+			for(const reward of rewards) {
+				x = this.adjustXForIconDisplacement();
+				width = this.adjustWidthForIconDisplacement();
+				const rewardSplit = reward.split(":");
+				const cc = $cgmzTemp.getCurrency(rewardSplit[0]);
+				if(!cc) continue;
+				const amt = Number(rewardSplit[1]);
+				const curString = `\\c[${cc._color}]\\i[${cc._iconIndex}]${cc._name}:\\c[0] ${CGMZ_Utils.numberSplit(amt)}`;
+				this._neededHeight += this.CGMZ_drawTextLine(curString, x, this._neededHeight, width, 'left');
+			}
+		}
+	}
 };
 //-----------------------------------------------------------------------------
 // Draw enemy skills - used by the Bestiary
@@ -9747,16 +10376,14 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaBestiarySkills = funct
 		const skill = $dataSkills[skillData.skillId];
 		if(!skill) continue;
 		let string = skill.name;
-		if(skill.iconIndex > 0) string = '\\i[' + skill.iconIndex + ']' + string;
-		if(CGMZ.Encyclopedia.NumberBestiarySkills) string = '\\c[' + CGMZ.Encyclopedia.LabelColor + ']' + i + CGMZ.Encyclopedia.BestiarySkillNumberSeparator + '\\c[0]' + string;
-		this.CGMZ_drawTextLine(string, 0, this._neededHeight, this.contents.width, 'left');
-		this._neededHeight += this.lineHeight();
+		if(skill.iconIndex > 0) string = `\\i[${skill.iconIndex}]${string}`;
+		if(CGMZ.Encyclopedia.NumberBestiarySkills) string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${i}${CGMZ.Encyclopedia.BestiarySkillNumberSeparator}\\c[0]${string}`;
+		this._neededHeight += this.CGMZ_drawTextLine(string, 0, this._neededHeight, this.contents.width, 'left');
 		i++;
 	}
 };
 //-----------------------------------------------------------------------------
 // Draw dropped items of an enemy - Always used by Bestiary
-// This function takes care of window's neededHeight
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaBestiaryDrops = function(drops) {
 	const width = this.contents.width / 2;
@@ -9773,36 +10400,30 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaBestiaryDrops = functi
 		if(CGMZ.Encyclopedia.ShowDropChances) {
 			x = width;
 			this.drawLabel(CGMZ.Encyclopedia.DropChanceText, x, this._neededHeight);
-			x += this.textWidth(CGMZ.Encyclopedia.DropChanceText);
+			x += this.CGMZ_textSizeEx(CGMZ.Encyclopedia.DropChanceText).width;
 			const descriptor = ((1/drop.denominator)*100).toFixed(2) + "%";
-			this.drawText(descriptor, x, this._neededHeight, this.contents.width, 'left');
+			this.CGMZ_drawTextLine(descriptor, x, this._neededHeight, this.contents.width, 'left');
 		}
 		this._neededHeight += this.lineHeight();
 	}
 };
 //-----------------------------------------------------------------------------
-// Draws meta note if applicable. Returns output height
+// Draws meta note if applicable.
 // <cgmzdesc:Description Here>
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaMeta = function(meta) {
-	if(!meta) return 0;
-	this.drawLabel(CGMZ.Encyclopedia.NoteText, 0, this._neededHeight);
-	const xOffset = this.textWidth(CGMZ.Encyclopedia.NoteText);
-	const outputHeight = this.CGMZ_drawText(meta, 0, xOffset, this._neededHeight, this.contents.width, 'left');
-	return outputHeight;
+	if(!meta) return;
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.NoteText}\\c[0]${meta}`;
+	this._neededHeight += this.CGMZ_drawText(meta, 0, 0, this._neededHeight, this.contents.width, 'left');
 };
 //-----------------------------------------------------------------------------
-// Draws description if applicable. Returns y-value past last line.
+// Draws description if applicable.
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaDescription = function(description) {
-	if(!description) return 0;
-	this.drawLabel(CGMZ.Encyclopedia.DescriptionText, 0, this._neededHeight);
-	if(CGMZ.Encyclopedia.StripNewlinesInDescription) {
-		description = description.replace(/(\r\n|\n|\r)/gm, " ");
-	}
-	const xOffset = this.textWidth(CGMZ.Encyclopedia.DescriptionText);
-	const outputHeight = this.CGMZ_drawText(description, 0, xOffset, this._neededHeight, this.contents.width, 'left');
-	return outputHeight;
+	if(!description) return;
+	if(CGMZ.Encyclopedia.StripNewlinesInDescription) description = description.replace(/(\r\n|\n|\r)/gm, " ");
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.DescriptionText}\\c[0]${description}`;
+	this._neededHeight += this.CGMZ_drawText(string, 0, 0, this._neededHeight, this.contents.width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draws success rate of an item - used for item entries
@@ -9810,7 +10431,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaDescription = function
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaSuccessRate = function(rate) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.SuccessRateText, rate + "%", x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.SuccessRateText}\\c[0]${rate}%`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draws whether item is consumed on use - used for item entries
@@ -9819,18 +10441,17 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaConsumable = function(
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
 	const descriptor = consumable ? CGMZ.Encyclopedia.YesText : CGMZ.Encyclopedia.NoText;
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.ConsumableText, descriptor, x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.ConsumableText}\\c[0]${descriptor}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draws item effects as needed - used for item entries
-// Returns y value after drawing the last effect
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaEffects = function(tracker) {
-	const x = 0;
-	const width = this.contents.width;
 	let descriptor1 = "";
 	let descriptor2 = "";
 	let sign = "";
+	let string = "";
 	for(const section of CGMZ.Encyclopedia.EffectDisplayInfo) {
 		switch(section) {
 			case "HP Effect":
@@ -9848,8 +10469,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaEffects = function(tra
 						descriptor2 = CGMZ_Utils.numberSplit(tracker.HPv2);
 						if(tracker.HPv2 > 0) descriptor2 = "+" + descriptor2;
 					}
-					this.drawEncyclopediaStandardLine(descriptor1, descriptor2, x, this._neededHeight, width);
-					this._neededHeight += this.lineHeight();
+					string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${descriptor1}\\c[0]${descriptor2}`;
+					this._neededHeight += this.CGMZ_drawTextLine(string, 0, this._neededHeight, this.contents.width, 'left');
 				}
 				break;
 			case "MP Effect":
@@ -9867,8 +10488,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaEffects = function(tra
 						descriptor2 = CGMZ_Utils.numberSplit(tracker.MPv2);
 						if(tracker.MPv2 > 0) descriptor2 = "+" + descriptor2;
 					}
-					this.drawEncyclopediaStandardLine(descriptor1, descriptor2, x, this._neededHeight, width);
-					this._neededHeight += this.lineHeight();
+					string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${descriptor1}\\c[0]${descriptor2}`;
+					this._neededHeight += this.CGMZ_drawTextLine(string, 0, this._neededHeight, this.contents.width, 'left');
 				}
 				break;
 			case "TP Effect":
@@ -9876,48 +10497,48 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaEffects = function(tra
 					descriptor1 = CGMZ.Encyclopedia.TPEffectText;
 					descriptor2 = CGMZ_Utils.numberSplit(tracker.TP);
 					if(tracker.TP > 0) descriptor2 = "+" + descriptor2;
-					this.drawEncyclopediaStandardLine(descriptor1, descriptor2, x, this._neededHeight, width);
-					this._neededHeight += this.lineHeight();
+					string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${descriptor1}\\c[0]${descriptor2}`;
+					this._neededHeight += this.CGMZ_drawTextLine(string, 0, this._neededHeight, this.contents.width, 'left');
 				}
 				break;
 			case "State Add":
 				if(tracker.ADDSTATE.length > 0) {
-					this._neededHeight += this.drawItemNames(CGMZ.Encyclopedia.AddStateText, x, width, tracker.ADDSTATE, 'state');
+					this.drawItemNames(CGMZ.Encyclopedia.AddStateText, tracker.ADDSTATE, 'state');
 				}
 				break;
 			case "State Remove":
 				if(tracker.REMOVESTATE.length > 0) {
-					this._neededHeight += this.drawItemNames(CGMZ.Encyclopedia.RemoveStateText, x, width, tracker.REMOVESTATE, 'state');
+					this.drawItemNames(CGMZ.Encyclopedia.RemoveStateText, tracker.REMOVESTATE, 'state');
 				}
 				break;
 			case "Buff":
 				if(tracker.BUFFS.length > 0) {
-					this._neededHeight += this.drawBuffParameters(CGMZ.Encyclopedia.AddBuffText, x, width, tracker.BUFFS);
+					this.drawBuffParameters(CGMZ.Encyclopedia.AddBuffText, tracker.BUFFS);
 				}
 				break;
 			case "Debuff":
 				if(tracker.DEBUFFS.length > 0) {
-					this._neededHeight += this.drawBuffParameters(CGMZ.Encyclopedia.AddDebuffText, x, width, tracker.DEBUFFS);
+					this.drawBuffParameters(CGMZ.Encyclopedia.AddDebuffText, tracker.DEBUFFS);
 				}
 				break;
 			case "Remove Buff":
 				if(tracker.REMOVEDBUFFS.length > 0) {
-					this._neededHeight += this.drawBuffParameters(CGMZ.Encyclopedia.BuffRemovalText, x, width, tracker.REMOVEDBUFFS);
+					this.drawBuffParameters(CGMZ.Encyclopedia.BuffRemovalText, tracker.REMOVEDBUFFS);
 				}
 				break;
 			case "Remove Debuff":
 				if(tracker.REMOVEDDEBUFFS.length > 0) {
-					this._neededHeight += this.drawBuffParameters(CGMZ.Encyclopedia.DebuffRemovalText, x, width, tracker.REMOVEDDEBUFFS);
+					this.drawBuffParameters(CGMZ.Encyclopedia.DebuffRemovalText, tracker.REMOVEDDEBUFFS);
 				}
 				break;
 			case "Grow":
 				if(tracker.GROW.length > 0) {
-					this._neededHeight += this.drawBuffParameters(CGMZ.Encyclopedia.GrowText, x, width, tracker.GROW);
+					this.drawBuffParameters(CGMZ.Encyclopedia.GrowText, tracker.GROW);
 				}
 				break;
 			case "Learn":
 				if(tracker.LEARNS.length > 0) {
-					this._neededHeight += this.drawItemNames(CGMZ.Encyclopedia.LearnSkillText, x, width, tracker.LEARNS, 'skill');
+					this.drawItemNames(CGMZ.Encyclopedia.LearnSkillText, tracker.LEARNS, 'skill');
 				}
 		}
 	}
@@ -9981,88 +10602,82 @@ CGMZ_Window_EncyclopediaDisplay.prototype.populateEffectTracker = function(effec
 	return tracker;
 };
 //-----------------------------------------------------------------------------
-// Check if has effects to draw
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaDisplay.prototype.hasEffects = function(tracker) {
-	return (tracker.HPv1 || tracker.HPv2 || tracker.MPv1 || tracker.MPv2 || tracker.TP ||  tracker.ADDSTATE.length > 0 ||
-			tracker.REMOVESTATE.length > 0 || tracker.BUFFS.length > 0 || tracker.DEBUFFS.length > 0 || tracker.REMOVEDBUFFS.length > 0 ||
-			tracker.REMOVEDDEBUFFS.length > 0 || tracker.GROW.length > 0 || tracker.LEARNS.length > 0);
-};
-//-----------------------------------------------------------------------------
 // Draw Buff Parameters - Draws buffs/debuffs with enough space on line
 // Returns y value below last line drawn
 //-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaDisplay.prototype.drawBuffParameters = function(label, x, width, buffArray) {
-	this.drawLabel(label, x, this._neededHeight);
-	const xOffset = x + this.textWidth(label);
-	const string = buffArray.map(buffId => TextManager.param(buffId)).join(", ");
-	const outputHeight = this.CGMZ_drawText(string, x, xOffset, this._neededHeight, width);
-	return outputHeight;
+CGMZ_Window_EncyclopediaDisplay.prototype.drawBuffParameters = function(label, buffArray) {
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${label}\\c[0]${buffArray.map(buffId => TextManager.param(buffId)).join(", ")}`;
+	this._neededHeight += this.CGMZ_drawText(string, 0, 0, this._neededHeight, this.contents.width);
+};
+//-----------------------------------------------------------------------------
+// Check if has effects to draw
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.hasEffects = function(tracker) {
+	return CGMZ_Utils.isObjectPopulated(tracker);
 };
 //-----------------------------------------------------------------------------
 // Check if has traits to draw
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.hasTraits = function(tracker) {
-	return (tracker.ATKSPEED || tracker.ATKTIMES || tracker.ATKELEMENT.length > 0 || tracker.ATKSTATES.length > 0 ||
-			tracker.PARTYABILITY.length > 0 || tracker.ADDSKILLTYPES.length > 0 || tracker.SEALSKILLTYPES.length > 0 || 
-			tracker.ADDSKILLS.length > 0 || tracker.SEALSKILLS.length > 0 || tracker.STATERESIST.length > 0);
+	return CGMZ_Utils.isObjectPopulated(tracker);
 };
 //-----------------------------------------------------------------------------
 // Draw Trait - draws a trait such as attack element or party ability
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaTrait = function(tracker) {
+	let string = "";
 	for(const section of CGMZ.Encyclopedia.TraitDisplayInfo) {
 		switch(section) {
 			case "Attack Speed":
 				if(tracker.ATKSPEED) {
-					this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.AttackSpeedText, tracker.ATKSPEED, 0, this._neededHeight, this.contents.width);
-					this._neededHeight += this.lineHeight();
+					string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.AttackSpeedText}\\c[0]${tracker.ATKSPEED}`;
+					this._neededHeight += this.CGMZ_drawTextLine(string, 0, this._neededHeight, this.contents.width, 'left');
 				}
 				break;
 			case "Attack Times":
 				if(tracker.ATKTIMES) {
-					this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.AttackTimesText, tracker.ATKTIMES, 0, this._neededHeight, this.contents.width);
-					this._neededHeight += this.lineHeight();
+					string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.AttackTimesText}\\c[0]${tracker.ATKTIMES}`;
+					this._neededHeight += this.CGMZ_drawTextLine(string, 0, this._neededHeight, this.contents.width, 'left');
 				}
 				break;
 			case "Attack Element":
 				if(tracker.ATKELEMENT.length > 0) {
-					this._neededHeight += this.drawTextArray(CGMZ.Encyclopedia.ElementText, tracker.ATKELEMENT, ", ");
+					this.drawTextArray(CGMZ.Encyclopedia.ElementText, tracker.ATKELEMENT, ", ");
 				}
 				break;
 			case "Attack States":
 				if(tracker.ATKSTATES.length > 0) {
-					this._neededHeight += this.drawItemNames(CGMZ.Encyclopedia.AttackStateText, 0, this.contents.width, tracker.ATKSTATES, 'state');
+					this.drawItemNames(CGMZ.Encyclopedia.AttackStateText, tracker.ATKSTATES, 'state');
 				}
 				break;
 			case "Party Ability":
 				if(tracker.PARTYABILITY.length > 0) {
-					this._neededHeight += this.drawTextArray(CGMZ.Encyclopedia.PartyAbilityText, tracker.PARTYABILITY, ", ");
+					this.drawTextArray(CGMZ.Encyclopedia.PartyAbilityText, tracker.PARTYABILITY, ", ");
 				}
 				break;
 			case "Seal Skill Types":
 				if(tracker.SEALSKILLTYPES.length > 0) {
-					this._neededHeight += this.drawTextArray(CGMZ.Encyclopedia.SealSkillTypesText, tracker.SEALSKILLTYPES, ", ");
+					this.drawTextArray(CGMZ.Encyclopedia.SealSkillTypesText, tracker.SEALSKILLTYPES, ", ");
 				}
 				break;
 			case "Add Skill Types":
 				if(tracker.ADDSKILLTYPES.length > 0) {
-					this._neededHeight += this.drawTextArray(CGMZ.Encyclopedia.AddSkillTypesText, tracker.ADDSKILLTYPES, ", ");
+					this.drawTextArray(CGMZ.Encyclopedia.AddSkillTypesText, tracker.ADDSKILLTYPES, ", ");
 				}
 				break;
 			case "Add Skills":
 				if(tracker.ADDSKILLS.length > 0) {
-					this._neededHeight += this.drawItemNames(CGMZ.Encyclopedia.AddSkillText, 0, this.contents.width, tracker.ADDSKILLS, 'skill');
+					this.drawItemNames(CGMZ.Encyclopedia.AddSkillText, tracker.ADDSKILLS, 'skill');
 				}
 				break;
 			case "Seal Skills":
 				if(tracker.SEALSKILLS.length > 0) {
-					this._neededHeight += this.drawItemNames(CGMZ.Encyclopedia.SealSkillText, 0, this.contents.width, tracker.SEALSKILLS, 'skill');
+					this.drawItemNames(CGMZ.Encyclopedia.SealSkillText, tracker.SEALSKILLS, 'skill');
 				}
 				break;
 			case "State Resist":
 				if(tracker.STATERESIST.length > 0) {
-					this._neededHeight += this.drawItemNames(CGMZ.Encyclopedia.StateResistText, 0, this.contents.width, tracker.STATERESIST, 'state');
+					this.drawItemNames(CGMZ.Encyclopedia.StateResistText, tracker.STATERESIST, 'state');
 				}
 		}
 	}
@@ -10134,12 +10749,13 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawSkillCosts = function(mpCost, tpCo
 	let width = this.adjustWidthForIconDisplacement();
 	const descriptor1 = CGMZ_Utils.numberSplit(mpCost);
 	const descriptor2 = CGMZ_Utils.numberSplit(tpCost);
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.MPCostText, descriptor1, x, this._neededHeight, width);
+	let string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.MPCostText}\\c[0]${descriptor1}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 	if(CGMZ.Encyclopedia.DisplayTPCosts) {
-		this._neededHeight += this.lineHeight();
 		x = this.adjustXForIconDisplacement();
 		width = this.adjustWidthForIconDisplacement();
-		this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.TPCostText, descriptor2, x, this._neededHeight, width);
+		string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.TPCostText}\\c[0]${descriptor2}`;
+		this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 	}
 };
 //-----------------------------------------------------------------------------
@@ -10148,8 +10764,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawSkillCosts = function(mpCost, tpCo
 CGMZ_Window_EncyclopediaDisplay.prototype.drawUserTPGain = function(tpGain) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	const descriptor = CGMZ_Utils.numberSplit(tpGain);
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.UserTPGainText, descriptor, x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.UserTPGainText}\\c[0]${CGMZ_Utils.numberSplit(tpGain)}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw generic state removal (battle/turn/walk)
@@ -10158,7 +10774,8 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawStateRemoval = function(removed, d
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
 	const descriptor2 = (removed) ? CGMZ.Encyclopedia.YesText : CGMZ.Encyclopedia.NoText;
-	this.drawEncyclopediaStandardLine(descriptor, descriptor2, x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${descriptor}\\c[0]${descriptor2}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draw auto removal (turns)
@@ -10166,13 +10783,12 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawStateRemoval = function(removed, d
 CGMZ_Window_EncyclopediaDisplay.prototype.drawStateDuration = function(auto, min, max) {
 	const x = this.adjustXForIconDisplacement();
 	const width = this.adjustWidthForIconDisplacement();
-	let descriptor = "";
+	let descriptor = CGMZ.Encyclopedia.InfiniteText;
 	if(auto) {
 		descriptor = (min == max) ? min + " " + CGMZ.Encyclopedia.TurnsText : min + " - " + max + " " + CGMZ.Encyclopedia.TurnsText;
-	} else {
-		descriptor =  CGMZ.Encyclopedia.InfiniteText;
 	}
-	this.drawEncyclopediaStandardLine(CGMZ.Encyclopedia.DurationText, descriptor, x, this._neededHeight, width);
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.DurationText}\\c[0]${descriptor}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //-----------------------------------------------------------------------------
 // Draws custom description. Some additional parsing required.
@@ -10182,10 +10798,9 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawCustomDescription = function(descr
 	const descRegex = /\\cgmzencdescimg\[[0-9]+\]/g;
 	description = description.split(descRegex);
 	this.drawLabel(CGMZ.Encyclopedia.DescriptionText, 0, this._neededHeight);
-	let xOffset = this.textWidth(CGMZ.Encyclopedia.DescriptionText);
-	let outputHeight = 0;
+	let xOffset = this.CGMZ_textSizeEx(CGMZ.Encyclopedia.DescriptionText).width;
 	for(let i = 0; i < description.length; i++) {
-		outputHeight += this.CGMZ_drawText(description[i], 0, xOffset, this._neededHeight + outputHeight, this.contents.width, 'left');
+		this._neededHeight += this.CGMZ_drawText(description[i], 0, xOffset, this._neededHeight, this.contents.width, 'left');
 		if(imagesArray.length > 0 && i < imagesArray.length) {
 			const imgId = imagesArray[i];
 			let scale = 1;
@@ -10194,14 +10809,13 @@ CGMZ_Window_EncyclopediaDisplay.prototype.drawCustomDescription = function(descr
 			}
 			this._customSprites[imgId].scale.x = scale;
 			this._customSprites[imgId].scale.y = scale;
-			this._customSprites[imgId].y = this._neededHeight + outputHeight;
+			this._customSprites[imgId].y = this._neededHeight;
 			this._customSprites[imgId].x = this.contents.width / 2;
 			this._customSprites[imgId].show();
-			outputHeight += this._customSprites[imgId].height * scale;
+			this._neededHeight += this._customSprites[imgId].height * scale;
 		}
 		xOffset = 0;
 	}
-	return outputHeight;
 };
 //-----------------------------------------------------------------------------
 // Draws custom/bestiary sketch image as sprite.
@@ -10221,6 +10835,30 @@ CGMZ_Window_EncyclopediaDisplay.prototype.displayBitmap = function(hue) {
 	return this._battlerSprite.height * scale;
 };
 //-----------------------------------------------------------------------------
+// Draws a custom image. No need to wait for load because height/width are provided
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.drawEncyclopediaExtraCustomImage = function(obj) {
+	const id = this.makeObjectId();
+	const sx = sy = 0;
+	const sw = dw = obj.width;
+	const sh = dh = obj.height;
+	const dy = this._neededHeight;
+	const dx = (obj.alignment === 'left') ? 0 : (obj.alignment === 'center') ? (this.contents.width - sw) / 2 : this.contents.width - sw;
+	const img = CGMZ_Utils.getImageData(obj.file, "img");
+	const bitmap = ImageManager.loadBitmap(img.folder, img.filename);
+	bitmap.addLoadListener(this.drawExtraCustomImageBitmap.bind(this, bitmap, sx, sy, sw, sh, dx, dy, dw, dh, id));
+	if(obj.block) this._neededHeight += dh;
+};
+//-----------------------------------------------------------------------------
+// Draws a custom image after load
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.drawExtraCustomImageBitmap = function(bitmap, sx, sy, sw, sh, dx, dy, dw, dh, id) {
+	const newId = this.makeObjectId();
+	if(id === newId) {
+		this.contents.blt(bitmap, sx, sy, sw, sh, dx, dy, dw, dh);
+	}
+};
+//-----------------------------------------------------------------------------
 // Draws custom sketches as sprites. Returns total output height of sketches
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaDisplay.prototype.displayCustomSketches = function(imagesToHide) {
@@ -10237,9 +10875,20 @@ CGMZ_Window_EncyclopediaDisplay.prototype.displayCustomSketches = function(image
 		this._customSprites[i].y = this._neededHeight + outputHeight;
 		this._customSprites[i].x = this.contents.width / 2;
 		this._customSprites[i].show();
-		outputHeight += this._customSprites[i].height * scale + $gameSystem.windowPadding();
+		outputHeight += this._customSprites[i].height * scale + this.padding;
 	}
 	return outputHeight;
+};
+//-----------------------------------------------------------------------------
+// Draws bestiary kill count (Requires [CGMZ] Extra Stats).
+//-----------------------------------------------------------------------------
+CGMZ_Window_EncyclopediaDisplay.prototype.drawBestiaryKillCount = function(enemyId) {
+	if(!Imported.CGMZ_ExtraStats) return;
+	const x = this.adjustXForIconDisplacement();
+	const width = this.adjustWidthForIconDisplacement();
+	const count = CGMZ_Utils.numberSplit($cgmz.getExtraStatsActor('individualEnemiesKilled', enemyId));
+	const string = `\\c[${CGMZ.Encyclopedia.LabelColor}]${CGMZ.Encyclopedia.KillCountText}\\c[0]${count}`;
+	this._neededHeight += this.CGMZ_drawTextLine(string, x, this._neededHeight, width, 'left');
 };
 //=============================================================================
 // CGMZ_Window_EncyclopediaCategory
@@ -10256,26 +10905,11 @@ CGMZ_Window_EncyclopediaPurchase.prototype.constructor = CGMZ_Window_Encyclopedi
 //-----------------------------------------------------------------------------
 CGMZ_Window_EncyclopediaPurchase.prototype.initialize = function(rect) {
 	Window_Selectable.prototype.initialize.call(this, rect);
+	if(Imported.CGMZ_WindowBackgrounds && CGMZ.Encyclopedia.PurchaseWindowBackground) this.CGMZ_setWindowBackground(CGMZ.Encyclopedia.PurchaseWindowBackground);
+	if(Imported.CGMZ_WindowSettings && CGMZ.Encyclopedia.PurchaseWindowSettings) this.CGMZ_setWindowSettings(CGMZ.Encyclopedia.PurchaseWindowSettings);
 	this._price = 0;
 	this.deactivate();
 	this.hide();
-};
-//-----------------------------------------------------------------------------
-// Set the window padding
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaPurchase.prototype.updatePadding = function() {
-	this.padding = CGMZ.Encyclopedia.PurchaseWindowPadding;
-};
-//-----------------------------------------------------------------------------
-// Load Proper Windowskin
-//-----------------------------------------------------------------------------
-CGMZ_Window_EncyclopediaPurchase.prototype.loadWindowskin = function() {
-	if(CGMZ.Encyclopedia.PurchaseWindowskin) {
-		const windowskin = CGMZ_Utils.getImageData(CGMZ.Encyclopedia.PurchaseWindowskin, "img");
-		this.windowskin = ImageManager.loadBitmap(windowskin.folder, windowskin.filename);
-	} else {
-		Window_Selectable.prototype.loadWindowskin.call(this);
-	}
 };
 //-----------------------------------------------------------------------------
 // Max columns to display
@@ -10353,7 +10987,7 @@ CGMZ_Window_EncyclopediaPurchase.prototype.itemTextAlign = function() {
 // Discover enemies automatically
 //=============================================================================
 //-----------------------------------------------------------------------------
-// Alias. Discover the enemies when battle starts
+// Discover the enemies when battle starts
 //-----------------------------------------------------------------------------
 const alias_CGMZ_Encyclopedia_BattleManager_setup = BattleManager.setup;
 BattleManager.setup = function(troopId, canEscape, canLose) {
@@ -10363,7 +10997,7 @@ BattleManager.setup = function(troopId, canEscape, canLose) {
 	}
 };
 //-----------------------------------------------------------------------------
-// Alias. Discover the enemies when a turn starts
+// Discover the enemies when a turn starts
 //-----------------------------------------------------------------------------
 const alias_CGMZ_Encyclopedia_BattleManager_startTurn = BattleManager.startTurn;
 BattleManager.startTurn = function() {
@@ -10375,7 +11009,7 @@ BattleManager.startTurn = function() {
 	}
 };
 //-----------------------------------------------------------------------------
-// Alias. Discover enemies when they are the target of an attack or they attack
+// Discover enemies when they are the target of an attack or they attack
 //-----------------------------------------------------------------------------
 const alias_CGMZ_Encyclopedia_BattleManager_invokeAction = BattleManager.invokeAction;
 BattleManager.invokeAction = function(subject, target) {
@@ -10399,11 +11033,11 @@ BattleManager.invokeAction = function(subject, target) {
 const alias_CGMZ_Encyclopedia_GameParty_gainItem = Game_Party.prototype.gainItem;
 Game_Party.prototype.gainItem = function(item, amount, includeEquip) {
 	alias_CGMZ_Encyclopedia_GameParty_gainItem.call(this, item, amount, includeEquip);
-	if (DataManager.isItem(item) && CGMZ.Encyclopedia.AutodiscoverItems) {
+	if(DataManager.isItem(item) && CGMZ.Encyclopedia.AutodiscoverItems) {
 		$cgmz.EncyclopediaDiscoverItem(item.id, "item");
-	} else if (DataManager.isWeapon(item) && CGMZ.Encyclopedia.AutodiscoverWeapons) {
+	} else if(DataManager.isWeapon(item) && CGMZ.Encyclopedia.AutodiscoverWeapons) {
 		$cgmz.EncyclopediaDiscoverItem(item.id, "weapon");
-	} else if (DataManager.isArmor(item) && CGMZ.Encyclopedia.AutodiscoverArmors) {
+	} else if(DataManager.isArmor(item) && CGMZ.Encyclopedia.AutodiscoverArmors) {
 		$cgmz.EncyclopediaDiscoverItem(item.id, "armor");
 	}
 };
@@ -10435,7 +11069,7 @@ Game_Party.prototype.setupStartingMembers = function() {
 // Discover skills automatically
 //=============================================================================
 //-----------------------------------------------------------------------------
-// Alias. Discover skills when actor learns skill.
+// Discover skills when actor learns skill.
 //-----------------------------------------------------------------------------
 const alias_CGMZ_Encyclopedia_GameActor_learnSkill = Game_Actor.prototype.learnSkill;
 Game_Actor.prototype.learnSkill = function(skillId) {
@@ -10447,16 +11081,26 @@ Game_Actor.prototype.learnSkill = function(skillId) {
 //=============================================================================
 // Game_Battler
 //-----------------------------------------------------------------------------
-// Discover states automatically
+// Discover states automatically, check for encyclopedia item use
 //=============================================================================
 //-----------------------------------------------------------------------------
-// Alias. Discover state when actor or enemy afflicted with one
+// Discover state when actor or enemy afflicted with one
 //-----------------------------------------------------------------------------
 const alias_CGMZ_Encyclopedia_GameBattler_addState = Game_Battler.prototype.addState;
 Game_Battler.prototype.addState = function(stateId) {
 	alias_CGMZ_Encyclopedia_GameBattler_addState.call(this, stateId);
 	if(this.isStateAddable(stateId) && CGMZ.Encyclopedia.AutodiscoverStates) {
 		$cgmz.EncyclopediaDiscoverState(stateId);
+	}
+};
+//-----------------------------------------------------------------------------
+// Item use may cause opening of encyclopedia
+//-----------------------------------------------------------------------------
+const alias_CGMZ_Encyclopedia_useItem = Game_Battler.prototype.useItem;
+Game_Battler.prototype.useItem = function(item) {
+	alias_CGMZ_Encyclopedia_useItem.call(this, item);
+	if(CGMZ.Encyclopedia.EncyclopediaItem && DataManager.isItem(item) && item.id === CGMZ.Encyclopedia.EncyclopediaItem) {
+		SceneManager.push(CGMZ_Scene_Encyclopedia);
 	}
 };
 //=============================================================================
@@ -10473,4 +11117,263 @@ Game_Action.prototype.apply = function(target) {
 		$cgmz.EncyclopediaDiscoverSkill(this._item._itemId);
 	}
 	alias_CGMZ_Encyclopedia_GameAction_apply.apply(this, arguments);
+};
+//=============================================================================
+// Scene_Battle
+//-----------------------------------------------------------------------------
+// Allow encyclopedia to be shown in battle
+//=============================================================================
+//-----------------------------------------------------------------------------
+// Also create Encyclopedia windows
+//-----------------------------------------------------------------------------
+const alias_CGMZ_Encyclopedia_SceneBattle_createAllWindows = Scene_Battle.prototype.createAllWindows;
+Scene_Battle.prototype.createAllWindows = function() {
+    alias_CGMZ_Encyclopedia_SceneBattle_createAllWindows.call(this);
+	this.createCGMZEncyclopediaCategoryWindow();
+	this.createCGMZEncyclopediaTotalsWindow();
+	this.createCGMZEncyclopediaListWindow();
+	this.createCGMZEncyclopediaDummyWindow();
+	this.createCGMZEncyclopediaDisplayWindow();
+	this.createCGMZEncyclopediaSubcategoryWindow();
+	this.CGMZEncyclopediaDeactivateAndHideAllWindows();
+};
+//-----------------------------------------------------------------------------
+// Create encyclopedia category window
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.createCGMZEncyclopediaCategoryWindow = function() {
+	this._cgmz_encyclopedia_categoryWindow = new CGMZ_Window_EncyclopediaCategory(this.CGMZEncyclopediaCategoryWindowRect());
+	this._cgmz_encyclopedia_categoryWindow.setHandler('ok', this.CGMZEncyclopediaOnCategoryOk.bind(this));
+	this._cgmz_encyclopedia_categoryWindow.setHandler('cancel', this.CGMZEncyclopediaOnCategoryCancel.bind(this));
+	this.addWindow(this._cgmz_encyclopedia_categoryWindow);
+};
+//-----------------------------------------------------------------------------
+// Category Window Rect
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaCategoryWindowRect = function() {
+	const x = 0;
+	const y = this.CGMZEncyclopediaHasTouchUI() ? this.buttonAreaHeight() : 0;
+	const width = Graphics.boxWidth;
+	const height = this.calcWindowHeight(CGMZ.Encyclopedia.CategoryLines, true);
+	return new Rectangle(x, y, width, height);
+};
+//-----------------------------------------------------------------------------
+// Create encyclopedia subcategory window
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.createCGMZEncyclopediaSubcategoryWindow = function() {
+	this._cgmz_encyclopedia_subcategoryWindow = new CGMZ_Window_EncyclopediaSubcategory(this.CGMZEncyclopediaSubcategoryWindowRect());
+	this._cgmz_encyclopedia_subcategoryWindow.setHandler('ok', this.CGMZEncyclopediaOnSubcategoryOk.bind(this));
+	this._cgmz_encyclopedia_subcategoryWindow.setHandler('cancel', this.CGMZEncyclopediaOnSubcategoryCancel.bind(this));
+	this._cgmz_encyclopedia_categoryWindow.setSubcategoryWindow(this._cgmz_encyclopedia_subcategoryWindow);
+	this.addWindow(this._cgmz_encyclopedia_subcategoryWindow);
+};
+//-----------------------------------------------------------------------------
+// Subcategory Window Rect
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaSubcategoryWindowRect = function() {
+	const x = 0;
+	const y = this._cgmz_encyclopedia_categoryWindow.y + this._cgmz_encyclopedia_categoryWindow.height;
+	const width = this._cgmz_encyclopedia_categoryWindow.width;
+	const height = this.calcWindowHeight(1, true);
+	return new Rectangle(x, y, width, height);
+};
+//-----------------------------------------------------------------------------
+// Create Totals Window
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.createCGMZEncyclopediaTotalsWindow = function() {
+	this._cgmz_encyclopedia_totalsWindow = new CGMZ_Window_EncyclopediaTotals(this.CGMZEncyclopediaTotalsWindowRect());
+	this._cgmz_encyclopedia_categoryWindow.setTotalWindow(this._cgmz_encyclopedia_totalsWindow);
+	this.addWindow(this._cgmz_encyclopedia_totalsWindow);
+};
+//-----------------------------------------------------------------------------
+// Totals Window Rect
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaTotalsWindowRect = function() {
+	const width = Graphics.boxWidth * (CGMZ.Encyclopedia.ListWindowWidth / 100.0);
+	const height = this.calcWindowHeight(2, false);
+	const x = CGMZ.Encyclopedia.ListWindowRight ? Graphics.boxWidth - width : 0 ;
+	const y = Graphics.boxHeight - this.calcWindowHeight(2, false);
+	return new Rectangle(x, y, width, height);
+};
+//-----------------------------------------------------------------------------
+// Create List Window
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.createCGMZEncyclopediaListWindow = function() {
+	this._cgmz_encyclopedia_listWindow = new CGMZ_Window_EncyclopediaList(this.CGMZEncyclopediaListWindowRect());
+	this._cgmz_encyclopedia_listWindow.setHandler('cancel', this.CGMZEncyclopediaOnListCancel.bind(this));
+	this._cgmz_encyclopedia_listWindow.setHandler('ok', this.CGMZEncyclopediaOnListOk.bind(this));
+	this._cgmz_encyclopedia_categoryWindow.setListWindow(this._cgmz_encyclopedia_listWindow);
+	this.addWindow(this._cgmz_encyclopedia_listWindow);
+};
+//-----------------------------------------------------------------------------
+// List Window Rect
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaListWindowRect = function() {
+	const width = this._cgmz_encyclopedia_totalsWindow.width;
+	const height = Graphics.boxHeight - (this._cgmz_encyclopedia_categoryWindow.y + this._cgmz_encyclopedia_categoryWindow.height) - this._cgmz_encyclopedia_totalsWindow.height;
+	const y = this._cgmz_encyclopedia_categoryWindow.y + this._cgmz_encyclopedia_categoryWindow.height;
+	const x = this._cgmz_encyclopedia_totalsWindow.x;
+	return new Rectangle(x, y, width, height);
+};
+//-----------------------------------------------------------------------------
+// Create Dummy Window
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.createCGMZEncyclopediaDummyWindow = function() {
+	this._cgmz_encyclopedia_dummyWindow = new CGMZ_Window_EncDummy(this.CGMZEncyclopediaDisplayWindowRect());
+	this.addWindow(this._cgmz_encyclopedia_dummyWindow);
+};
+//-----------------------------------------------------------------------------
+// Create Display Window
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.createCGMZEncyclopediaDisplayWindow = function() {
+	this._cgmz_encyclopedia_displayWindow = new CGMZ_Window_EncyclopediaDisplay(this.CGMZEncyclopediaDisplayWindowRect());
+	this._cgmz_encyclopedia_listWindow.setDisplayWindow(this._cgmz_encyclopedia_displayWindow);
+	this._cgmz_encyclopedia_displayWindow.setBuyMode(false);
+	this.addWindow(this._cgmz_encyclopedia_displayWindow);
+};
+//-----------------------------------------------------------------------------
+// Display window (and dummy window) rect
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaDisplayWindowRect = function() {
+	const x = CGMZ.Encyclopedia.ListWindowRight ? 0 : this._cgmz_encyclopedia_listWindow.width;
+	const y = this._cgmz_encyclopedia_listWindow.y;
+	const width = Graphics.boxWidth - this._cgmz_encyclopedia_listWindow.width;
+	const height = Graphics.boxHeight - y;
+	return new Rectangle(x, y, width, height);
+};
+//-----------------------------------------------------------------------------
+// Check if should make room for Touch UI
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaHasTouchUI = function() {
+	return !CGMZ.Encyclopedia.DisableTouchUISpace || ConfigManager.touchUI;
+};
+//-----------------------------------------------------------------------------
+// Check if the current category has subcategories
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaHasSubcategories = function() {
+	const categorySymbol = this._cgmz_encyclopedia_categoryWindow.currentSymbol();
+	return $cgmzTemp.hasEncyclopediaSubcategoriesForSymbol(categorySymbol);
+};
+//-----------------------------------------------------------------------------
+// On category Cancel
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.showCGMZEncyclopedia = function(fromParty) {
+	this._cancelButton.y = 2;
+	this._cgmz_encyclopedia_cameFromParty = fromParty;
+	if(fromParty) {
+		this._partyCommandWindow.hide();
+		this._partyCommandWindow.deactivate();
+	} else {
+		this._actorCommandWindow.hide();
+		this._actorCommandWindow.deactivate();
+	}
+	this._cgmz_encyclopedia_dummyWindow.show();
+	this._cgmz_encyclopedia_categoryWindow.show();
+	this._cgmz_encyclopedia_listWindow.show();
+	this._cgmz_encyclopedia_totalsWindow.show();
+	this._cgmz_encyclopedia_categoryWindow.activate();
+};
+//-----------------------------------------------------------------------------
+// On category Cancel
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaDeactivateAndHideAllWindows = function() {
+	this._cgmz_encyclopedia_displayWindow.hide();
+	this._cgmz_encyclopedia_dummyWindow.hide();
+	this._cgmz_encyclopedia_categoryWindow.hide();
+	this._cgmz_encyclopedia_listWindow.hide();
+	this._cgmz_encyclopedia_subcategoryWindow.hide();
+	this._cgmz_encyclopedia_totalsWindow.hide();
+	this._cgmz_encyclopedia_categoryWindow.deactivate();
+	this._cgmz_encyclopedia_listWindow.deactivate();
+	this._cgmz_encyclopedia_subcategoryWindow.deactivate();
+	this._cgmz_encyclopedia_displayWindow.deactivate();
+};
+//-----------------------------------------------------------------------------
+// On category Cancel
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaOnCategoryCancel = function() {
+	this._cancelButton.y = this.buttonY();
+	this.CGMZEncyclopediaDeactivateAndHideAllWindows();
+	if(this._cgmz_encyclopedia_cameFromParty) {
+		this._partyCommandWindow.show();
+		this._partyCommandWindow.activate();
+	} else {
+		this._actorCommandWindow.show();
+		this._actorCommandWindow.activate();
+	}
+};
+//-----------------------------------------------------------------------------
+// On category OK
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaOnCategoryOk = function() {
+	if(this.CGMZEncyclopediaHasSubcategories()) {
+		this._cgmz_encyclopedia_subcategoryWindow.show();
+		this._cgmz_encyclopedia_subcategoryWindow.activate();
+		this._cgmz_encyclopedia_subcategoryWindow.select(0);
+		this._cgmz_encyclopedia_subcategoryWindow.ensureCursorVisible(true);
+	} else {
+		this._cgmz_encyclopedia_dummyWindow.hide();
+		this._cgmz_encyclopedia_displayWindow.show();
+		this._cgmz_encyclopedia_categoryWindow.deactivate();
+		this._cgmz_encyclopedia_listWindow.activate();
+		this._cgmz_encyclopedia_listWindow.select(0);
+		this._cgmz_encyclopedia_listWindow.ensureCursorVisible(true);
+	}
+};
+//-----------------------------------------------------------------------------
+// On subcategory ok
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaOnSubcategoryOk = function() {
+	this._cgmz_encyclopedia_dummyWindow.hide();
+	this._cgmz_encyclopedia_displayWindow.show();
+	this._cgmz_encyclopedia_listWindow.setSubcategory(this._cgmz_encyclopedia_subcategoryWindow.subcategory());
+	this._cgmz_encyclopedia_listWindow.activate();
+	this._cgmz_encyclopedia_listWindow.select(0);
+	this._cgmz_encyclopedia_listWindow.ensureCursorVisible(true);
+	this._cgmz_encyclopedia_subcategoryWindow.deactivate();
+	this._cgmz_encyclopedia_subcategoryWindow.hide();
+};
+//-----------------------------------------------------------------------------
+// On subcategory cancel
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaOnSubcategoryCancel = function() {
+	this._cgmz_encyclopedia_categoryWindow.activate();
+	this._cgmz_encyclopedia_subcategoryWindow.deactivate();
+	this._cgmz_encyclopedia_subcategoryWindow.hide();
+};
+//-----------------------------------------------------------------------------
+// On list cancel
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaOnListCancel = function() {
+	this._cgmz_encyclopedia_dummyWindow.show();
+	this._cgmz_encyclopedia_displayWindow.hide();
+	this._cgmz_encyclopedia_displayWindow.setItem("clear", null);
+	if(this.CGMZEncyclopediaHasSubcategories()) {
+		this._cgmz_encyclopedia_subcategoryWindow.show();
+		this._cgmz_encyclopedia_subcategoryWindow.activate();
+	} else {
+		this._cgmz_encyclopedia_categoryWindow.activate();
+	}
+	this._cgmz_encyclopedia_listWindow.setSubcategory("all");
+	this._cgmz_encyclopedia_listWindow.select(0);
+	this._cgmz_encyclopedia_listWindow.ensureCursorVisible(true);
+	this._cgmz_encyclopedia_listWindow.deactivate();
+	this._cgmz_encyclopedia_listWindow.deselect();
+};
+//-----------------------------------------------------------------------------
+// On list OK
+//-----------------------------------------------------------------------------
+Scene_Battle.prototype.CGMZEncyclopediaOnListOk = function() {
+	this._cgmz_encyclopedia_listWindow.activate();
+};
+//-----------------------------------------------------------------------------
+// Also make encyclopedia windows count as input windows
+//-----------------------------------------------------------------------------
+const alias_CGMZ_Encyclopedia_SceneBattle_isAnyInputWindowActive = Scene_Battle.prototype.isAnyInputWindowActive;
+Scene_Battle.prototype.isAnyInputWindowActive = function() {
+	return (
+		alias_CGMZ_Encyclopedia_SceneBattle_isAnyInputWindowActive.call(this) ||
+		this._cgmz_encyclopedia_categoryWindow.active ||
+		this._cgmz_encyclopedia_listWindow.active ||
+		this._cgmz_encyclopedia_subcategoryWindow.active
+    );
 };
