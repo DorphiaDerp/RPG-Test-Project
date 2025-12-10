@@ -1,3 +1,3 @@
-VERY IMPORTANT: This requires nw.dll to run. You can get it here if you're not in the playtesting group chat: https://drive.google.com/file/d/1sBfU1NZPpvGMJ3w7qan2yJKXyI8AjWX3/view?usp=sharing
+VERY IMPORTANT: This requires nw.dll to run. You can get it here if you're not in the playtesting group chat: https://www.dropbox.com/scl/fi/9883u6hwhsjngze89otrg/nw.dll?rlkey=j9z3iwigfle7nurom86sxuhsq&st=kyhway5k&dl=0
 
-Going to look into Github large file storage to make this work easier, but for now just download it there and put the nw.dll in the folder with the game.exe.
+Used to be Drive but the storage on my drive was suffocating so using DropBox now. :P
